@@ -27,9 +27,15 @@ Based-on that assumption, the algorithm uses [Information Theory](https://en.wik
 
 That "map" is a two-dimensional function in a three-dimensional space, which is assumed to create a smooth, differentiable manifold that can then be "smoothed" with a [Laplacian](https://en.wikipedia.org/wiki/Laplace_operator) [convolution kernel](https://en.wikipedia.org/wiki/Kernel_(image_processing)).
 
+![RooftopNoisy291127001WNMI.png](./thesis/images/RooftopNoisy291127001WNMI.png)
+
 The outcome of this "smoothing" operation should then provide a manifold with a trivially unique "peak" (statistical "mode") whose $\left(x, y\right)$ coordinates refer to the pixel overlap of the two images.
 
+![StoneWallNoisy164725001FWNMI.png](./thesis/images/StoneWallNoisy164725001FWNMI.png)
+
 Overall, this process provides a quick-to-compute algorithm to give an estimated registration between two images, which is somewhat robust against lighting and orientation variability between the distinct views.
+
+![RooftopNoisy291127SP001001.png](./thesis/images/RooftopNoisy291127SP001001.png)
 
 <a id="directory-structure"></a>
 ## Directory Structure
