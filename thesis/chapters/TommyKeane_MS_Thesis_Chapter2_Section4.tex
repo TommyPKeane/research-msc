@@ -4,7 +4,7 @@
 % Master of Science Thesis
 % Department of Electrical and Microelectronic Engineering
 %
-% March 2011
+% April 2011
 %
 %
 %
@@ -17,7 +17,7 @@
 %
 % CHAPTER 2
 %
-% SECTION 4
+% SECTION 4: Mutual Information
 %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -25,25 +25,34 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % BEGIN DOCUMENT
 
-The histogram discussion in Section 2.3 has already introduced several major concerns and concessions made in the application of mutual information measurements in image processing. To begin, mutual information is understood as the measurement of shared redundancy between two random variables. In the case of digital images we are looking at discrete random functions, with discrete PDFs (the image PDFs described in the previous section), and thus discrete entropy measures. Entropy is the measure of randomness in a random variable and is used in the calculation of mutual information, as shown in Equation XX. Calculating mutual information in digital images makes it a discrete measure based on random variables and their distributions. Whenever you have two random variables, you can generate a measure of their mutual information, conceptually, by measuring how their marginal entropies relate to their joint lack of entropy. A view of mutual information applied to image registration can make the purpose and derivation of mutual information much clearer, albeit this is going in reverse.
+To begin, this section will focus on discussing the application of mutual information, which requires a strong understanding of probability and information theory. As was done in Section 2.2 for the probability discussion, there will be some details presented that are necessary for understanding this algorithm and its applications, but most details will be assumed known. Excellent texts to reference for this discussion, pertaining to its development or when in need of a deeper understanding, are \cite{Reza1994}, \cite{MacKay2004}, \cite{Kullback1997}, and \cite{Cover2006}. The text by Cover and Thomas \cite{Cover2006} is an excellent reference for those with an understanding of information theory but are in need of a refresher, while the text by MacKay \cite{MacKay2004} is better suited for those unfamiliar with information theory or the application of probability theory. A lot of the following discussion is best referenced by \cite{Cover2004}.
 
-So, in beginning with two digital images, again with an example system image with 8-bpp and a single channel, there is a question as to what content do they share and what is different. An even more important question, and one in line with this research, is: what portions, if any, from these images are the same? The ultimate goal is image registration, the technique by which corresponding image pixels, and regions of pixels, are mapped to their equivalents in another image and the mapping is described by a single, invertible homography. The WFMI algorithm uses a discrete mutual information measure to determine these pixel/region correspondences required to register the two images. The following discussion will present mutual information in terms of its application in this algorithm. It is far too rich a topic to cover extensively, so to begin this discussion it must be understood in terms of entropy measures.
+\begin{figure}
+\centering
+\includegraphics[height=.6\textwidth]{informationTheory}
+\caption{Venn diagram of key measures in Information Theory}
+\label{infoTheory}
+\end{figure}
 
-An 8-bpp $\mathfrak{m} \times \mathfrak{n}$ image is a bounded set of $\mathfrak{m} \cdot \mathfrak{n}$ intensity values distributed randomly, according to the image PDF, in the interval of [0,255]. Corresponding this set to another image, i.e. another data set, requires some mathematical measure that is based on mathematical attributes of the data sets themselves, i.e. their image PDFs. In Section 2.2 the concept of the intensity histogram was presented and a development for the digital PDF was shown. Again, the PDF of this image is not the PDF of all digital images, since it corresponds only to the actual random data of the particular image, i.e. its particular intensity histogram. So given two digital images, their two intensity histograms can be found, then normalized to generate their image PDFs (also called the marginal PDFs), and then their marginal entropies can be determined.
+In a general case, mutual information can be understood as the measurement of shared randomness between two random variables. In the case of digital images we are looking at discrete random variables, with their characterizing PMFs, and thus discrete entropy measures. Entropy ($H(A)$) is the measure of randomness in a random variable and is used in the derivation of the mutual information formula. The following information theory terms to be described can be visualized in Figure \ref{informationTheory}. Calculating entropy for the random variable $A$ is shown in Eq. \ref{entropy}. Calculating mutual information in digital images makes it a discrete measure based on discrete random variables and their distributions. Whenever you have two random variables, you can generate a measure of their mutual information, conceptually, by measuring how their marginal entropies relate to their conditional entropy. Again, by referencing Figure \ref{informationTheory}, it is quite clear that there are several ways to determine the mutual information $I(A;B)$. To choose the most appropriate method for calculating mutual information, a view of mutual information applied to image registration can make this derivation much clearer, albeit this is conceptually going in reverse.
+
+\begin{equation}
+\label{entropy}
+	H(A) = \sum_{i}{p_{A}(a_{i}) \log_{n}{\left(p_{A}(a_{i})\right)}}
+\end{equation}
+
+So for the best understanding, this section will start with the digital images and their correspondence, and then work backwards through the registration process to best understand the application of mutual information. In beginning with two digital images, again with an example system image with 8-bpp and a single channel, the question of registration is: what pixels in image A are found in image B? A refinement of this question, thinking more in line with this research, is: what portions or regions, if any, from these images are the same? In general, as described in Section 1.2, the four stages of image registration typically deal with pixel correspondences. Once the correspondences are found, the corresponding pixel locations from one image are mapped to their equivalents in the other image, and that mapping is described as an invertible homography. The WFMI algorithm ultimately uses a discrete mutual information measure to determine the correspondences required to register the two images, but it does not look solely for pixel-to-pixel correspondence. The following discussion will present mutual information in terms of its application in this algorithm; a general development is far too rich a topic to cover extensively, so this discussion will begin with entropy measures and their meaning in digital imagery.
+
+An 8-bpp $\mathfrak{m} \times \mathfrak{n}$ image is a bounded  set of $\mathfrak{m} \cdot \mathfrak{n}$ intensity values distributed randomly in the interval of [0,255]. Corresponding this set to another image, \ie another data set, requires some mathematical measure that is based on mathematical attributes of the data sets themselves, i.e. their PMFs. In Section 2.3 the concept of the intensity histogram was presented and a development for the PMF was presented. Given two digital images, their two intensity histograms can be found, then normalized to generate their image PMFs (also called the marginal PMFs), and then their marginal entropies can be determined through Eq. \ref{entropy}.
 
 Entropy is the measure of randomness in a random variable, random function, or in this case, a random data set. In communication theory the entropy can be thought of as: the minimum number of bits required to transmit the data over a lossless channel. To translate this understanding to digital imagery, the exact same definition can be used. A digital image is often regarded as a 3-dimensional function, with digital video being a 4-dimensional function. But given a digital image of size $\mathfrak{m} \times \mathfrak{n} \times \mathfrak{p}$, it can be rearranged to appear as a 1-D signal (a vector, much like a communications signal) of size $(\mathfrak{m} \cdot \mathfrak{n} \cdot \mathfrak{p}) \times 1$. Thus the measure of entropy is presenting the minimum number of bits required to encode or losslessly transmit these $\mathfrak{m} \cdot \mathfrak{n} \cdot \mathfrak{p}$ random pixels. If they are completely random, the entropy is comparably large, but if the data is completely deterministic the entropy approaches 0. The mathematical determination of this randomness measure is essentially characterizing the amount (or lack thereof) of redundancy in the data. This gives a metric of encoding efficiency but not a means of encoding. Therefore it is best to understand entropy as a bounding metric, since it presents the minimum amount of bits for encoding in an ideal situation, which is often not achievable, or in the case of non-integer results, it is not physically possible (i.e. we cannot realistically transmit 3.2 bits). By equation XX, one can take the distribution of a data set and determine its entropy.
 
 \begin{equation}
 \label{PMF}
-	p_{A}(a_{i})=h_{A}(a_{i}) \cdot \left(\sum_{i}{h_{A}(a_{i})} \right)^{-1}
+	p_{A}(\bf{a})=h_{A}(\bf{a}) \cdot \left(\sum_{i}{h_{A}(a_{i})} \right)^{-1} = \frac{h_{A}(\bf{a})}{\mathfrak{m}\cdot\mathfrak{n}}
 \end{equation}
 
-\begin{equation}
-\label{entropy}
-	H(A) = \sum_{i}{p_{A}(a_{i}) \log_{b}{\left(p_{A}(a_{i})\right)}}
-\end{equation}
-
-Classically, $b$ is taken to be 2, so as to create a value $H(A)$ measured as the total number of unique bits required to losslessly encode the data. Equation \ref{PMF} is the equation for generating the image PDF.
+Classically, $n$ is taken to be 2, so as to create a value $H(A)$ measured as the total number of unique bits required to losslessly encode the data. Equation \ref{PMF} is the equation for generating the image PDF.
 
 Now stepping back to the digital image as a data set, it is clear that a measure of entropy can be determined for each image, based on the normalized histograms from Equation XX. Again, since the images are random functions, then joint and conditional probability densities between the images can be determined from joint and conditional histograms. For example, the joint distribution is the normalization of the bivariate intensity histogram. For the bivariate histogram, the $(n_{i},p_{j})^{th}${-}bin's value means: there are this many pixels where image A has intensity relating to index $n_{i}$ and image B has intensity relating to index $p_{j}$ at the same spatial location (given images of the same size). In the case of generating the bivariate histogram between an image and itself, the result is an $\mathfrak{m} \times \mathfrak{n}$ ``identity'' matrix since an image will only have a value relating to index $n_{i}$ where itself also has the value relating to index $p_{j}$ when $i \equiv j$. The identity matrix is typically square, but this quoted version means a non-square sparse matrix with diagonal values equal to 1. For example, given $h(0,2)=4$, then what is known is that somewhere in image A there are at least 4 pixels with intensity values in the range of bin 0, and there are at least 4 pixels in image B with intensity values in the range of bin 2, and that only 4 of those pixels in each image are in the exact same spatial locations within the images. That is all that is known and can be extracted from only the bivariate histogram, and so neither image can be rebuilt from the joint histogram, or even with the joint and marginal histograms. At most their spatial contingency upon one another can be determined.
 

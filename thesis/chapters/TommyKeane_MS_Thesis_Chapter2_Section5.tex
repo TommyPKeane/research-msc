@@ -4,7 +4,7 @@
 % Master of Science Thesis
 % Department of Electrical and Microelectronic Engineering
 %
-% March 2011
+% April 2011
 %
 %
 %
@@ -17,7 +17,7 @@
 %
 % CHAPTER 2
 %
-% SECTION 5
+% SECTION 5: Camera Geometry
 %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -26,6 +26,7 @@
 % BEGIN DOCUMENT
 
 Sections 2.3 and 2.4 have presented the mathematics and concepts required for building the mutual information metric and applying it to digital images. The next major concept to understand is how multiple views of a single scene can be related by a homography. Also, this section presents the major obstacles in multi-view geometry, specifically parallax differences and occlusions.
+
 As the discussion has been already laid out, there are three distinct coordinate systems present in the mathematics discussed here. There are the scene coordinates: the 3-dimensional spatial world with time, the camera (view) coordinates: a 2-dimensional spatial domain with a third dimension for color and a fourth dimension for time, and the frame coordinates: the 2-dimensional plus one color dimension image extracted from the video. The camera view projects the scene onto the 2-D spatial domain of the video while preserving the time dimension (albeit sampled and quantized in every dimension), and the frame is a sampling of the time dimension of the camera (no quantization). Video compression concerns will be ignored in this discussion, but essentially they can be thought of as quantizing and interpolating the time information across multiple frames. Similar to what will be discussed in Chapter 6Õs review of potential future applications in motion tracking or estimation, multiple frames could be incorporated to build a more accurate metric and alleviate these concerns.
 
 

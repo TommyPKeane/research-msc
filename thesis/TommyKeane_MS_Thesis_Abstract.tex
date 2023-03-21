@@ -3,10 +3,16 @@
 % Tommy P. Keane
 % Master of Science Thesis
 % Department of Electrical and Microelectronic Engineering
+% Rochester Institute of Technology
 %
-% March 2011
+% April 2011
 %
 %
+% Funded By: Lenel Systems Inc., A UTC Fire & Security Corporation
+%
+% Algorithm Intellectual Property Owned By: Lenel Systems Inc.
+%
+% http://www.tommypkeane.com
 %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -19,11 +25,7 @@
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % BEGIN DOCUMENT
-\begin{doublespace}
-
 To contribute a novel approach in the field of image registration and panorama creation, this algorithm foregoes any scene knowledge, requiring only modest scene overlap and an acceptable amount of entropy within each overlapping view, both empirically derived. The weighted and filtered mutual information (WFMI) algorithm has been developed for stationary, color, surveillance video cameras and relies on color gradients for feature correspondence. This is a novel extension of well-established maximization of mutual information (MMI) algorithms. Where MMI algorithms are typically applied to high altitude photography and medical imaging (scenes with relatively simple shapes and affine homographies between views), the WFMI algorithm has been designed for scenes with occluded objects and significant parallax. Despite the typically non-affine surveillance scenarios, searching in the affine space is a practical assumption that provides computational efficiency and accurate results, even with complex scene views that suffer from parallax and occlusions. The WFMI algorithm can perfectly register affine views, performs exceptionally well with near-affine related views, and in complex (projective) views with parallax and occlusion the WFMI algorithm provides an accurate estimate of the overlap regions between the views. The WFMI algorithm uses simple calculations (vector field gradient, Laplacian filtering, and feature histograms) to generate the WFMI metric and provide the optimal affine relationship. This algorithm is unique when compared to typical MMI algorithms and modern registration algorithms because it avoids a lot of \textit{a priori} knowledge and calculations, while still providing an accurate or useful estimate for realistic scenes. With pixel based weightings and the Laplacian filtering operation, the WFMI algorithm overcomes the failures of typical MMI algorithms in scenes where complex or occluded shapes do not provide sufficiently large peaks in the mutual information maps. This work has currently been applied to individual video frames and future work could extend the algorithm into utilizing motion information or temporal frame registrations to enhance scenes with smaller overlap regions, lower entropy, or significant parallax and occlusions.
-
-\end{doublespace}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % END OF DOCUMENT

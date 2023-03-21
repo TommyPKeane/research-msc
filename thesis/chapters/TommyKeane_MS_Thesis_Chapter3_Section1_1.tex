@@ -4,7 +4,7 @@
 % Master of Science Thesis
 % Department of Electrical and Microelectronic Engineering
 %
-% March 2011
+% April 2011
 %
 %
 %
@@ -17,7 +17,7 @@
 %
 % CHAPTER 3
 %
-% SECTION 1.1
+% SECTION 1.1: Feature Extraction
 %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -25,9 +25,11 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % BEGIN DOCUMENT
 
-For the WFMI algorithm it was reasoned that the initial stage of feature extraction should be simple enough to allow the possibility of real-time operation, but must still provide robust enough features to secure success in a variety of complex and unknown scenarios. Looking to the work in [XX] the choice of color gradient features was found appropriate to provide a robust set of non-rigid shape details that, even under scaling and quantization, preserve a significant amount of the original trichromatic information from the images. Quantization was implemented to achieve a computationally efficient algorithm.
-Given an m?n 8-bit pair of 3-channel color images, each typical (480-by-640) image constitutes a set of roughly 79 million possible pixel intensity values per channel. The algorithm from [XX] is a vector gradient operation calculated by using the vectorized color pixel values $(\mathfrak{p}\times1)$ as locations in the (in this case) 3-channel (RGB) color space. Taking horizontal and vertical gradients along each channel in the intensity domain and then using those resultant gradient images as inputs to the calculation of the maximum eigenvalue of the trichromatic color-space Jacobian provides an essentially infinite, floating-point range of intensity values in the resultant color gradient (single channel) map. Practically, there is an initial quantization required to limit this theoretically infinite floating-point discrepancy, while maintaining the information of the original RGB images. Obviously any quantization operation beyond this will superfluously remove information, but will enhance computational efficiency in the correspondence metric calculation; the key then is to discern what amount of quantization will maintain enough information to generate an appropriate and accurate mutual information map.
-In order to determine the appropriate amount of quantization it is necessary to look ahead to the next step of the algorithm. In calculating the , the subsequent step of the algorithm is to quantize the color gradient images into the ``edge'' (integer versus floating-point) images. This secondary quantization results in images on the order of 1 to 4 bits of pixel depth (single channel). Thus the main concern for the quantization of the color gradient images is to provide accurate information to create viable distinctions on the order of 3 to 30 distinct edges.
+For the WFMI algorithm it was reasoned that the initial stage of feature extraction should be simple enough to allow the eventual possibility of real-time operation, but must still provide robust enough features to secure success in a variety of complex and unknown scenarios. Looking to the work in \cite{Ugarriza2009} the choice of color gradient features was found appropriate to provide a robust set of non-rigid shape details that, even under scaling and quantization, preserve a significant amount of the original information from the color video frames. After generating the RGB-gradient map (gradient of the RGB image, which is a floating point single channel image) a quantization step was implemented to achieve a computationally efficient algorithm, as explained.
+
+Given an $\mathfrak{m}\times\mathfrak{n}$ 8-bpp pair of 3-channel color images, each typical ($480\times640$) image constitutes a set of roughly 79 million possible pixel intensity values per channel. The algorithm from \cite{Lee1991} is a vector-space gradient operation calculated by using the vectorized color pixel values ($\mathfrak{p}\times1$ vectors) as locations in the current color space (\ie RGB in this implementation). Taking horizontal and vertical gradients along each channel in the intensity domain and then using those resultant gradient images as inputs to the calculation of the maximum eigenvalue of the color-space Jacobian provides an essentially infinite, floating-point range of intensity values in the resultant color gradient (again: single channel) map. Practically, there is an initial quantization required to limit this theoretically infinite floating-point discrepancy, while maintaining the information of the original RGB images. Obviously any quantization operation beyond this will superfluously remove information, but will enhance computational efficiency in the correspondence metric calculation; so the key is to then discern what amount of quantization will maintain enough information to generate an appropriate and accurate mutual information map.
+
+In order to determine the appropriate amount of quantization it is necessary to look ahead to the next step of the algorithm. In calculating the , the subsequent step of the algorithm is to quantize the color gradient images into the "edge" (integer versus floating-point, "gradient") images. This secondary quantization results in images on the order of 1 to 4 bits of pixel depth (single channel). Thus the main concern for the quantization of the color gradient images is to provide accurate information to create viable distinctions on the order of 3 to 30 distinct edges.
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

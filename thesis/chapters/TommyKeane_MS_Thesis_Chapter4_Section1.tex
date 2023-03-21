@@ -17,7 +17,7 @@
 %
 % CHAPTER 4
 %
-% SECTION 1
+% SECTION 1: MATLAB IMPLEMENTATION
 %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -25,8 +25,9 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % BEGIN DOCUMENT
 
-Histogram calculation.
-Multi-resolution search.
+The main concern with implementation of the algorithm in MATLAB\textsuperscript{\textregistered} had always been the run-time and computational efficiency of the algorithm. While a real-time implementation was beyond the scope of this research, it had been a goal to provide an intelligently designed algorithm that would allow for future extension into a real-time algorithm operating on video feeds of 15-30 frames per second (fps).
+
+The very first implementation of the algorithm was exorbitantly wasteful by attempting to use circular shifting for the implementation of the exhaustive translation search, and worked on the images at their original scale (typically $640\times480$). As the algorithm progressed, there were many improvements made in terms of computational efficiency and intelligence in the design. The algorithm eventually took its greatest improvement in computational speed through implementation of a hierarchical search with Gaussian pyramid reduction. Searching at the top level of a (typically) 4-level pyramid (each subsequent level being subsampled by 2) and then progressing down the pyramid to define the mutual information map peak.
 
 Scaling concerns, rotation most influential, skew relatively unhelpful.
 
