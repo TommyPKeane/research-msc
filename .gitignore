@@ -3,3 +3,15 @@
 
 # Other Directories
 _backup/
+data/*
+publications/*
+
+# LaTeX Build Files
+*.aux
+*.lof
+*.log
+*.toc
+*.out
+*.tex.bbl
+*.tex.blg
+*.pdf
