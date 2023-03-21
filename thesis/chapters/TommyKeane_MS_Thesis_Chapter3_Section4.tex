@@ -1,0 +1,101 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+% Tommy P. Keane
+% Master of Science Thesis
+% Department of Electrical and Microelectronic Engineering
+% Rochester Institute of Technology
+%
+% April 2011
+%
+%
+%
+% Funded By: Lenel Systems Inc., A UTC Fire & Security Corporation
+%
+% Algorithm Intellectual Property Owned By: Lenel Systems Inc.
+%
+%
+% http://www.tommypkeane.com
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+% CHAPTER 3
+%
+% SECTION 4: Weighted and Filtered Mutual Information
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% BEGIN DOCUMENT
+
+This stage of the algorithm is part of the affine search stage, so it should be kept in mind that the following calculations are re-occurring at each point in the search through the skew-scale-rotation-space. This must be the most efficient stage in the algorithm because it occurs so many times, but it is also the core of the algorithm that is the limitation for the accuracy. This section is the most important in understanding the trade-offs between accuracy and efficiency.
+
+Up to this point the discussion of mutual information has described it as a measure based on random variables. Those random variables were then attributed to the digital color images. But in the actual implementation, it is performed on the maps of the ``edge'' values (in the range of $2^{b_{e}}$) from each view. But it is not just the mutual information between the two images that is being calculated, it is the mutual information between every possible rectangular overlap between the two images (in an exhaustive translation search over the ``edge'' maps). This makes the mutual information a mapped measurement, meaning that the value of the peak of the mutual information is mapped to a particular pair of (row, column) translation parameters. This is not a direct mapping since the mutual information measure is over the $(2\cdot\mathfrak{m}-1)\times(2\cdot\mathfrak{n}-1)$ space. Ultimately a shift of $\left(\mathfrak{m}, \mathfrak{n}\right)$ is made to determine the actual translation parameters. To simplify the notation, the mutual information map is said to be of size $M\times N = (2\mathfrak{m}-1) \times (2\mathfrak{n}-1)$.
+
+So, the search image has been transformed and the ``edge'' map has been extracted, along with the ``edge'' map for the reference image, and these are passed into the correspondence stage (labeled WFMI in Figure \ref{algorithmFlowchart}). The most efficient implementation was achieved by creating arrays of indices that correspond to two corners of the overlap region for each ``edge'' map. Since all the overlaps will be rectangular, knowledge of the top left corner point and bottom right corner point can determine the entire set of pixels in that rectangular region. The initial implementation tried comparing regions based on circularly shifting through the maps, but this meant that at every calculation, even when only 1 pixel was being compared, the entire array had to be passed along in memory. And actually to perform the circular shifting accurately, the arrays had to be padded to $2\mathfrak{m} \times 2\mathfrak{n}$ with null values. By inspecting the operation and utilizing the sizes of the arrays, the full set of overlaps can be found by their two corner pixel locations (as mentioned), and all these indices can be stored in a set of arrays. Then in the actual exhaustive translation search, only those pixels in the bounds of the indices are extracted and passed through the calculations. This is far more efficient, albeit a more conceptually complex means of implementation. It is much easier to understand the following calculations while thinking of the arrays as layers overlapping in space as they shift pixel-by-pixel creating every possible rectangular overlap.
+
+Now having the pixels that are in the potential overlap, the mutual information between the two ``edge'' maps in this overlap must be calculated, and this will be the metric for judging correspondence. This requires calculating the bivariate and marginal histograms with the two maps. This was also an initially slow operation, as there was no optimized implementation of a bivariate histogram in MATLAB\textsuperscript{\textregistered} or OpenCV. Obviously the bivariate histogram cannot be generated from the marginal histograms unless the two regions are independent, but if they're independent their mutual information will be null, so this would be a completely counter-productive assumption. However, the marginal histograms can be calculated from the bivariate histogram, regardless of the independence of the two maps' data, if a full range bivariate histogram is being implemented. This must be inspected carefully in implementation, because while the full set of ``edge'' values are relevant to the bivariate and marginal histograms' calculations, 0 values are being ignored in the algorithm as ``not data''. If the implementation of the bivariate histogram is only $2^{b_{e}} \times 2^{b_{e}}$ then it has not counted any zero values, thus it also has not counted any pixels from the reference or search map that line up with zeros in the other map. Generating the marginal, or univariate, histograms from this bivariate histogram would be a glaring mistake that ignores a possibly significant amount of data. Conceptually it actually would push the algorithm towards registration in extremely low entropy or non-existent data regions. Again, the zero values (null values) signify either the presence of a noise or extremely fine detail ``edge'', or a region outside the bounds of the image after the transformation, because the images are padded by the null values to be the same size, which makes the complex indexing optimization simpler to implement. The actual implementation of the bivariate histogram in the algorithm used binary, element-wise multiplication and then a summation of a modified version of the ``edge'' maps. Essentially for a range of $2^{b_{e}}$ there are $2^{b_{e}}$ maps built where each of these new maps is a binary image. The first image will have a value of true (1) where it is equal to 1 (the first edge value) and all other pixels in the map will have a value of zero. This follows all the way up to the $2^{b_{e}}$ ``edge'' value. Having these $2^{b_{e}}$ maps for both images' ``edge'' maps allows direct element-to-element multiplication, and then the resultant multiplied map can be summed and that total value (the addition of all the ones) will signify the amount of values that exist in the corresponding locations, thus filling in the bivariate histogram. Take the first ``edge'' value map for example: in both the reference and search map there will only be a 1 where that first value exists, everything else is zero. Since $1\cdot1=1$ and $0\cdot1=0$, the resultant multiplied map will only have a 1 where both maps had a 1 in the same relative location. The phrase \textit{relative location} is used because these are actually the extracted regions of potential overlap (this is all still in the exhaustive translation search), so what is being found is: for this given overlap scenario, how many pixels correspond between the maps in these overlap regions? So to build the $2^{b_{e}} \times 2^{b_{e}}$ bivariate histogram, there will be $2^{b_{e}} \cdot 2^{b_{e}}$ multiplied maps and their summations. Given that this is being performed at the top of the Gaussian pyramid and that these are now sets of binary data (storable as 1-bpp), this can be an extremely efficient calculation, and in $2^{b_{e}}$ of those operations the marginal histograms can be found without having to append an extra iteration.
+
+Now the bivariate and marginal histograms have been found and they can be normalized to become the joint and marginal PMFs for that overlap region. What also can be calculated from the bivariate histogram is the number of ``edge'' pixels that were found in the overlap region. Using the bivariate histogram takes an accurate look at only the pixels that do not correspond to null regions in the overlaps. This is the opposite of the discussion above, because this count will be used as the weighting for the accuracy/significance of the mutual information map. This is illustrated by Equation \ref{weightingmap}.
+
+\begin{equation}
+\label{weightingmap}
+w(A,B)=\sum_{j}\sum_{i}{h_{AB}(a_{i},b_{j})}
+\end{equation}
+
+\noindent The use of the bivariate histogram limits the effect of regions of overlap containing lots of null data. Null data will limit the number of ``edge'' pixels being counted, since the bivariate measure does not count when an ``edge'' in one map lines up with a null in the other map, and so it is statistically possible to produce false maximums for the mutual information. So the fewer the number of pixels used in the calculation, the more likely they are to correspond, and thus the less likely they are to be true correspondences. Essentially the weighting map will be an $M \times N$ deformed pyramid shape. The center pixel in the $M \times N$ weighting map (and mutual information map) corresponds to both images overlapping each other completely. This is the point with the most features in its calculation, so it is the most statistically unlikely to correspond, and thus must be compensated to compare accurately. This may seem counter-intuitive, but consider again that there are noise and intensity variations present across the views, as well as all of the discussion of the quantizations made throughout a digital image system (as presented in Chapter 2). Even if the same camera takes two images in succession without any motion, it is statistically unlikely that every single pixel value will be identical, even though conceptually they should be. This is again why these ``edges'' are used for correspondence rather than just intensity values, because scene shapes should be maintained under realistic noise and variations. So this weighting is crucial to the success of the algorithm, otherwise it is statistically likely that all the small overlap regions (a few rows or columns overlapping) will produce peaks in the mutual information map.
+
+\begin{equation}
+\label{WeightedInformation}
+	I_{w}(A,B)=w(A,B) \cdot I(A,B)
+\end{equation}
+
+Now with the PMFs defined and the weighting map, just as presented in Chapter 2, the normalized mutual information (Equation \ref{NormalizedMutualInformation}) can be calculated, and then it can be weighted by the pixel weighting map as presented in Equation \ref{WeightedInformation} producing the Weighted Normalized Mutual Information (WNMI). Normally with the WNMI map, a peak is searched for, the pixel location relating to the peak is related through a shifting operation back to the translation parameters required to produce the overlap and the full affine transformation would be defined. However, as will be shown in the results in the next chapter, it was found that this did not take into the statistics of realistic views. For affine views the peak of the WNMI map would usually be accurate, but it was found that even for affine views, significant noise or low entropy could actually create statistically-accurate false peaks in the map. These will be discussed more in the next chapter. What was required though was to perform an operation that could extract not just the maximum peak in the WNMI map, but the maximum \textit{and} sharpest peak. The rationale stemming from an understanding of what occurs when identical data is passed through a mutual information (or even a correlation) metric. To step back to a theoretical understanding, the autocorrelation (or correlating a signal with itself) of a set of data produces impulse-like signal, where the only shift that can cause a peak is when the image is aligned with itself. For this discussion, the mutual information map (WNMI map) would have a single peak at its center, when the entire image is overlapped with itself without any shift or transformation. This happens because every single feature value aligns and the PMFs are identical and so with any shift in the data, there will be a significant loss of alignment thus a drastic change in the joint PMF. So when correlating, or finding a mutual information map for, an image (or signal) with itself, it will have a very strong peak when aligned and will drop off extremely rapidly for any shift. For a more complete mathematical understanding, this is identical to the theories behind ``matched filter'' design. So, even if the two views aren't identical, even in the overlap region, they should be more similar than anything else in the images; but more importantly they will create a peak when aligned and any small shifts in that alignment will produce significantly reduced values (comparatively). So even in a low entropy case when the center of the WNMI map will produce a statistical mountain/plateau, there will be a peak somewhere in the map that is very narrow and corresponds to the true optimal translation. Thus by filtering the WNMI map with some peak detector operation, that very thin but comparatively tall peak will be raised up while slowly varying regions, flat regions and mound-like peaks, will be lowered. Thus the implementation of the Laplacian kernel as given in Equation \ref{laplacianFilter}. This kernel looks like an upside-down traffic cone and is an excellent peak detector.
+
+
+\begin{equation}
+\label{laplacianFilter}
+	L(u,v)=\frac{4}{(\alpha + 1)} \cdot
+	\begin{bmatrix}
+		\frac{\alpha}{4} & \frac{(1-\alpha)}{4} & \frac{\alpha}{4} \\
+		\frac{(1-\alpha)}{4} & -1 & \frac{(1-\alpha)}{4} \\
+		\frac{\alpha}{4} & \frac{(1-\alpha)}{4} & \frac{\alpha}{4}
+	\end{bmatrix}, \quad \alpha \in [0,1)
+\end{equation}
+
+
+As you can see from the kernel, the neighboring values are compared to the center value (the value being filtered). So if the region is flat, this zero-phase FIR filter will produce a zero value. But if the center value varies significantly from its neighbors then there will be a large value produced (positively or negatively). As the Laplacian filter can also be thought of as a second derivative filter, there will be both positive and negative values produced as the kernels rises along and then descends down a peak, thus is is necessary to actually take the absolute value of the filtered WNMI map, producing the Absolute value of the Filtered, Weighted, Normalized Mutual Information (AFWNMI) map. A peak in the AFWNMI map now corresponds to the maximum, most impulse-like, peak in the WNMI map, and is far more statistically likely to correspond to the optimal translation parameters.
+
+
+The last step to mention is that the peak location from the AFWNMI map is not directly the translation parameters needed for the affine transformation. A few algebraic steps are required to work back through the process and determine that actual translation that has occurred. The peak location is express by the values in Equation \ref{peakLocation}, where the $(u,v)$ space denotes that the AFWNMI map space is not the same as the image space, which has been referred to as $(x,y)$.
+
+\begin{equation}
+\label{peakLocation}
+	(\delta_{u},\delta_{v})=\max_{u,v}\left(\mathfrak{I}_{L\mathfrak{w}}\right)
+\end{equation}
+
+\noindent With these values for the peak location, the shift for the map size must be accounted for and removed, as shown in Equation \ref{peakTranslation}. This equation is shown with the values as point pairs but this can be implemented as vector operations in MATLAB\textsuperscript{\textregistered} or performed separately in a non-array language.
+
+\begin{equation}
+\label{peakTranslation}
+	(t_{x},t_{y})=(k,l) \cdot \left| (\delta_{x},\delta_{y}) - (\mathfrak{m},\mathfrak{n}) \right|
+\end{equation}
+
+\noindent The values $k$ and $l$ are used as the sign of the translation, because the de-shifting operation does not accurately produce the proper sign for the translation, so a second operation (as shown in Equation \ref{peakSign}) is required.
+
+\begin{equation}
+\label{peakSign}
+	(k,l) = \begin{Bmatrix}
+	-1, \quad (\delta_{x},\delta_{y}) \le (\mathfrak{m},\mathfrak{n}) 
+	\\ +1, \quad (\delta_{x},\delta_{y}) > (\mathfrak{m},\mathfrak{n})
+	\end{Bmatrix}
+\end{equation}
+
+\noindent The goal is to set $k$ and $l$ to be either $-1$ or $1$, corresponding to the sign of the translation in that direction. The assumption is that the transformed search image will be in the space of the reference image, and the image centers will be the centers of the coordinate system, for the purpose of the transformation (different from indexing coordinates). So since the AFNMI map center is at $(\mathfrak{m},\mathfrak{n})$, then being less than that would be a shift left or up, negative, and otherwise it's a positive shift to the right or down. The actual implementation, as will be discussed in the next sections, resizes the images to padded versions where they can be thought of as layers, and so the values of $k$ and $l$ are calculated slightly differently to choose the appropriate padding amount and direction, but this displays the concept more succinctly and generally.
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% END OF DOCUMENT
+

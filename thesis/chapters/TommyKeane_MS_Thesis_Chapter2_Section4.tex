@@ -18,7 +18,6 @@
 %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %
 % CHAPTER 2
@@ -31,13 +30,13 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % BEGIN DOCUMENT
 
-To begin, this section will focus on discussing the application of mutual information, which requires a strong understanding of probability and information theory. As was done in Section 2.2 for the probability discussion, there will be some details presented that are necessary for understanding this algorithm and its applications, but most details will be assumed known. Excellent texts to reference for this discussion, pertaining to its development or when in need of a deeper understanding, are \cite{Reza1994}, \cite{MacKay2004}, \cite{Kullback1997}, and \cite{Cover2006}. The text by Cover and Thomas \cite{Cover2006} is an excellent reference for those with an understanding of information theory but are in need of a refresher, while the text by MacKay \cite{MacKay2004} is better suited for those unfamiliar with information theory or the application of probability theory. A lot of the following discussion is best referenced by \cite{Cover2004}.
+To begin, this section will focus on discussing the application of mutual information, which requires a strong understanding of probability and information theory. As was done in Section 2.2 for the probability discussion, there will be some details presented that are necessary for understanding this algorithm and its applications, but most details will be assumed known. Excellent texts to reference for this discussion, pertaining to its development or when in need of a deeper understanding, are \cite{Reza1994}, \cite{MacKay2004}, \cite{Kullback1997}, and \cite{Cover2006}. The text by Cover and Thomas \cite{Cover2006} is an excellent reference for those with an understanding of information theory but are in need of a refresher, while the text by MacKay \cite{MacKay2004} is better suited for those unfamiliar with information theory or the application of probability theory. A lot of the following discussion is best referenced by \cite{Cover2006}.
 
 \begin{figure}[h]
 \centering
 \includegraphics[height=.6\textwidth]{informationTheory}
 \caption{Venn diagram of key measures in Information Theory}
-\label{infoTheory}
+\label{informationTheory}
 \end{figure}
 
 In a general case, mutual information can be understood as the measurement of the average shared determinism between two random variables; that is, how much does the probability of occurrence of one random variable portray about the probability of occurrence of another. In the case of digital images we are looking at discrete random variables, with their characterizing PMFs (probability of occurrence), and thus discrete entropy measures. Entropy, $H(A)$, is the measure of average randomness in a random variable and is used in the derivation of the mutual information formula. The following information theory terms to be described can be visualized in Figure \ref{informationTheory}. Calculating entropy for the random variable $A$ is shown in Eq. \ref{entropy}. Calculating mutual information in digital images makes it a discrete measure based on discrete random variables and their distributions. Whenever you have two random variables, you can generate a measure of their mutual information, conceptually, by measuring how their marginal entropies relate to their conditional entropy. Again, by referencing Figure \ref{informationTheory}, it is quite clear that there are several ways to determine the mutual information $I(A;B)$. To choose the most appropriate method for calculating mutual information, a view of mutual information applied to image registration can make this derivation much clearer, albeit this is conceptually going in reverse.
