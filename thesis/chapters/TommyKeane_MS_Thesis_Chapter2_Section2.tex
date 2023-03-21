@@ -3,13 +3,18 @@
 % Tommy P. Keane
 % Master of Science Thesis
 % Department of Electrical and Microelectronic Engineering
+% Rochester Institute of Technology
 %
 % April 2011
 %
 %
 %
-% .tex and .sty modified from:
-% http://www.ce.rit.edu/studentresources/gradresource/LaTexThesis.zip
+% Funded By: Lenel Systems Inc., A UTC Fire & Security Corporation
+%
+% Algorithm Intellectual Property Owned By: Lenel Systems Inc.
+%
+%
+% http://www.tommypkeane.com
 %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -51,7 +56,7 @@ Simplifying the discussion to the notion of an $\mathfrak{m} \times \mathfrak{n}
 
 Thus as random variables, the images of a scene each have their own Probability Mass Function (PMF) which characterizes them \cite{Papoulis2002}. Though in our discussion we are making the assertion that the Probability Density Function (PDF) that describes the model random variable of the scene is being approximated by the PMF of the image that captures that scene. Each distinct view of the scene should be modeled by a distinct function of the intensities reflected and refracted by the objects in the scene, thus a distinct continuous random variable that will be approximated through image capture by the discrete random variable (image) associated with that view. And so the fundamental assertion being made is that overlapping views should share the same scene model in the overlap. Essentially describing two overlapping views as two random variables with non-trivial conditional probabilities. They are related and can describe each other, in part, because they are captured from the same original model, in that overlap region. And so a joint PMF between two overlapping views will be non-trivial and non-separable, asserting that distinct overlapping views are not independent. This is the foundation for the use of the mutual information metric. Non-mutually exclusive random variables will have some amount of mutual information between them.
 
-And so to finalize the notation and understanding, the discussion is focused on the images captured from the scene. Each view generates an image ($f_{i}$) that is a 2-D random variable over the image domain (from $(1,1)$ to $(\mathfrak{m},\mathfrak{n})$). Each image has come from a projection, sampling, and quantization of the scene at that view that is modeled by $\tilde{f}_{i}$. The scene view has the PDF $\tilde{p}_{i}$ while the image from the view has the PMF $p_{i}$. The rest of the algorithm is built on the registration of two frames, extensible to multiple frames, and so the two images will be described more simply as random variables $A$ and $B$. Thus they will have a joint probability mass of $p_{AB}(\bf{a},\bf{b})$ and their marginal probability masses $p_{A}(\bf{a})$ and $p_{B}(\bf{b})$, where $\bf{a}$ and $\bf{b}$ are the outcomes (the intensities at the pixel locations). The 2-D PMF for digital images is accepted in practice as the normalized intensity histogram. The next section will discuss the relationship between the image histogram and the proposed PMF notation, which will be used to characterize an image (the random variable) and its relationship to the corresponding scene.
+And so to finalize the notation and understanding, the discussion is focused on the images captured from the scene. Each view generates an image ($f_{i}$) that is a 2-D random variable over the image domain (from $(1,1)$ to $(\mathfrak{m},\mathfrak{n})$). Each image has come from a projection, sampling, and quantization of the scene at that view that is modeled by $\tilde{f}_{i}$. The scene view has the PDF $\tilde{p}_{i}$ while the image from the view has the PMF $p_{i}$. The rest of the algorithm is built on the registration of two frames, extensible to multiple frames, and so the two images will be described more simply as random variables $A$ and $B$. Thus they will have a joint probability mass of $p_{AB}(\bf{a},\bf{b})$ and their marginal probability masses $p_{A}(\bf{a})$ and $p_{B}(\bf{b})$, where $\bf{a}$ and $\bf{b}$ are the outcomes (the vectors of intensities or feature values at the respective pixel locations). The 1-D PMF for digital images is accepted in practice as the normalized intensity histogram, and the 2-D Joint PMF is the normalized bi-variate intensity histogram. The next section will discuss the relationship between the image histogram and the proposed PMF notation, which will be used to characterize an image (the random variable) and its relationship to the corresponding scene.
 
 
 

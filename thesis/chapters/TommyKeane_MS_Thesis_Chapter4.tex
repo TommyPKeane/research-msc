@@ -15,7 +15,7 @@
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %
-% CHAPTER 4
+% CHAPTER 5
 %
 % PREAMBLE
 %
@@ -25,7 +25,11 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % BEGIN DOCUMENT
 
-TO BE WRITTEN
+To evaluate the results of the algorithm they have been separated into three categories. The affine scenarios are the images from views that can be registered perfectly by purely affine homographies. In this category there are no realistic surveillance-type scenes available. To generate these unrealistic scenarios cropped images coming from a larger image are used here. Using these ideal affine scenarios allows an evaluation of the algorithm under ideal conditions. Given that the algorithm performs an affine search, any affine views from a scene of modest entropy in their overlap, should result in perfect registration, as will be shown. A comparison to a manual registration is used to identify the implementation concerns and characteristics of the algorithm. Any affine cases in which the algorithm failed would not be due to parallax or occlusions, but to insufficient scene entropy or a failure in the feature generation. This category of results shows not only the theoretical accuracy of the algorithm, but was of great use during the testing phase of the implementation.
+
+Unless all objects in the scene are at infinite or equivalent depth, multiple views will not be accurately relatable by an affine homography. The near-affine scenarios are those with minimal amounts of parallax and little-to-no occlusion. These are realistic views of real scenes, but under restricted conditions such as minimal camera-to-camera rotation, relatively consistent depth variation between objects in the scene, and/or large camera-to-scene distance compared to the object sizes. These cases test the appropriateness of the algorithm in realistic, but simplistic, scenarios. These were used as a stepping stone to the completely realistic scenes and show the accuracy of the affine homography as an estimate in simple projective scenarios (\ie { }those devoid of considerable parallax or occlusions). Again, manual registration test cases are used (still using an affine homography) for benchmarking the implementation.
+
+The last category is the projective views and complex scenes, which are the most irregular but also the most realistic scenarios. These are most appropriately modeled by a Fundamental matrix transformation or even a non-linear polynomial transformation, if at all. These scenes present parallax disparities between the views and the views are all subject to object or motion occlusions. Manual registration testing, maintaining minimal computational complexity, found that a convincing view is often capable with a projective homography and as such these scenes are labeled as being projectively related. The parallax disparities and occlusions could present views that cannot be registered on a pixel-to-pixel basis, but our goal is to generate a convincing panoramic view, not to generate pixel or sub-pixel registration. Ideally the algorithm would have advanced to apply the WFMI metric in a projective search-space, but results will show that the accuracy allowable by the much more efficient affine search-space were sufficient for estimating convincing views. Initial attempts to extend to the projective search-space, as discussed in Chapter 4, were found to be computationally exhaustive to implement.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % END OF DOCUMENT
