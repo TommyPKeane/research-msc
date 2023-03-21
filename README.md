@@ -37,7 +37,7 @@ Overall, this process provides a quick-to-compute algorithm to give an estimated
 - [`data`](./data/): Associated Data Files for the Research and Documents
 - [`publications`](./publications/): Pre-Print $\LaTeX$ versions of related Conference and Journal Publications
 - [`software`](./software/): Related Code created during the Research Process
-- [`thesis`](./thesis/): $\LaTex$ Thesis Document Code
+- [`thesis`](./thesis/): $\LaTeX$ Thesis Document Code
 
 <a id="copyright-and-affiliations"></a>
 ## Copyright and Affiliations
