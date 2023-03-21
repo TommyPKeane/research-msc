@@ -30,20 +30,62 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % BEGIN DOCUMENT
 
-For the WFMI algorithm it was reasoned that the initial stage of feature extraction should be simple enough to allow the eventual possibility of real-time operation, but must still provide robust enough features to secure success in a variety of complex and unknown scenarios. Looking to the work in \cite{Ugarriza2009} the choice of color gradient features was found appropriate to provide a robust set of non-rigid shape details that, even under scaling and quantization, preserve a significant amount of the original information from the color video frames. After generating the RGB-gradient map (which is a floating point single channel image) a quantization step was implemented to achieve a computationally efficient algorithm.
+For the WFMI algorithm it was reasoned that the initial stage of feature extraction should be simple enough to allow the eventual possibility of real-time operation, but must still provide robust enough features to secure success in a variety of complex and unknown scenarios. Looking to the work in \cite{Ugarriza2009} the choice of color gradient features was found appropriate to provide a robust set of non-rigid shape details that, even under scaling and quantization of the image(s), preserve a significant amount of the original information about the scene structure and content. After generating the RGB-gradient map, a quantization step was implemented to achieve a computationally efficient algorithm, while also binning features based on the type of structure they represented (both empirically and conceptually).
 
-Given an $\mathfrak{m}\times\mathfrak{n}$ 8-bpp pair of 3-channel color images, each  image (typically $480\times640$) is first processed to extract a feature map. The algorithm from \cite{Lee1991} is a vector-space gradient operation calculated by using the vectorized color pixel values ($\mathfrak{p}\times1$ vectors) as locations in the current color space (\ie RGB in this implementation). Taking horizontal and vertical gradients along each channel in the intensity domain and then using those resultant gradient images as inputs to the calculation of the maximum eigenvalue of the color-space Jacobian provides an essentially infinite, floating-point range of intensity values in the resultant color gradient map (again: single channel). In a practical implementation, there is an earlier, intial quantization required to limit this theoretically infinite floating-point map to the bit-depth of data-type. In the MATLAB\textsuperscript{\textregistered} and OpenCV implementations this was set to 64-bits, and this is the maximum amount of information that can be generated or stored by these features. Any quantization operation beyond this will superfluously remove information, but will enhance computational efficiency in the PMF calculation which has a range of $2^{b}$ (with $b$ being the bit-depth) maximum bins; so the key is to then discern what amount of quantization will maintain enough information to generate an appropriate and accurate mutual information map that is applicable for further processing in the registration search.
+Given an $\mathfrak{m}\times\mathfrak{n}$ 8-bpp pair of 3-channel color images, each  image (developed with $480\times640$ RGB images) is first processed to extract a feature map. The algorithm from \cite{Lee1991} is a vector-space gradient operation calculated by using the vectorized color pixel values ($\mathfrak{p}\times1$ vectors) as locations in the current color space. Taking horizontal and vertical gradients along each channel in the intensity domain and then using those resultant gradient images as inputs to the calculation of the maximum eigenvalue of the space-to-color vector field matrix ($D^{T}D$ in \cite{Lee1991}'s notation, Eq. \ref{DTDmatrix}) provides an essentially infinite, floating-point range of intensity values in the resultant color gradient map. This will be a single-channel map of size $\mathfrak{m}\times\mathfrak{n}$, matching the original image channel dimensions. In a practical implementation, there is an initial quantization at this point to limit this theoretically infinite floating-point map to the bit-depth of data-type. In the MATLAB\textsuperscript{\textregistered} and OpenCV implementations this was set to 64-bits, since this data holds the maximum amount of information that can be generated or stored by these features. Any quantization operation beyond this will superfluously remove information, but will enhance computational efficiency in the PMF calculation which has a range of $2^{b}$ (with $b$ being the bit-depth) maximum bins; so the key is to then discern what amount of quantization will maintain enough information to generate an appropriate and accurate mutual information map that is applicable for further processing in the registration search.
 
-In order to determine the appropriate amount of quantization it is necessary to look ahead to the next step of the algorithm. The subsequent step of the algorithm is to perform an affine transform search with an exhaustive translation search. This will be explained in Section 3.3, but in order to perform a computationally efficient search with a metric based on joint and marginal PMF calculations for each translation in the exhaustive search, there is a need to quantize the color gradient maps into the ``edge'' maps. This secondary quantization results in maps on the order of one to four bits of pixel depth (still single channel) thus providing on the order of 3 to 30 distinct ``edges''. Since the PMF calculations will be based on full range histograms, as was discussed, then the joint PMF size will be $2^{b_{e}}\cdot2^{b_{e}}$, where $b_{e}$ is the bit-depth of the gradient to ``edge'' quantization. (Note: the use of ``edge'' is to maintain that this is not a binary map, there is no thresholding operation, the gradient is simply quantized so a syntactical distinction is being made.)
+The subsequent step of the algorithm is to perform an affine transform search with an exhaustive translation search. This will be explained in Section 3.3, but in order to perform a computationally efficient search with a metric based on joint and marginal PMF calculations for each translation in the exhaustive search, there is a need to quantize the color gradient maps into the ``edge'' maps of $b_{e}$-bpp. The optimal implementation for this secondary quantization was found with maps on the order of 1- to 4-bpp thus providing on the order of three to thirty distinct ``edges''. Since the PMF calculations will be based on full range histograms, then the joint PMF size will be $2^{b_{e}} \times 2^{b_{e}}$, where $b_{e}$ is the bit-depth of the gradient to ``edge'' quantization. Note that the use of ``edge'', in scare-quotes, is to maintain that this is not a binary map. There is no thresholding operation, as the gradient is simply quantized, no binarized.
+
+The stronger the quantization, \ie{ }the fewer the number of ``edges'', the less information available in the image from the color-space gradient map, yet this is inversely proportional to the computational efficiency. Also, discussed in more detail later on, in the use of a hierarchical search there is an added concern as to the effects of the subsampling on the image information. These are all significant implementation concerns, and it was found that the fastest and most accurate implementation was achieved with $b_{e}=2$, thus having 4 significant ``edges'' while zero values were ignored in the PMF calculations. To determine the quantization, a simplification of the method in \cite{Ugarriza2009} was used.
 
 \begin{figure}[h]
 \centering
-\includegraphics[width=.8\textwidth]{GradientHistogram}
+\includegraphics[width=.95\textwidth]{GradientHistogram}
 \caption{Example Gradient Map Histogram with Quantization Boundaries}
 \label{gradienthistogram}
 \end{figure}
 
-The stronger the quantization, \ie{ }the fewer the number of ``edges'', the less information available in the image from the color-space gradient map, yet this is inversely proportional to the computational efficiency. Also, discussed in more detail later on, in the use of a hierarchical search there is an added concern as to the effects of the subsampling on the image information. These are all significant implementation concerns, and it was found that the fastest and most accurate implementation was achieved with $b_{e}=2$, thus having 4 significant ``edges'' while zero values were ignored in the PMF calculations. To determine the quantization a simplification of the method in \cite{Ugarriza2009} was used where the gradient map histogram was quantized. The top 20\% of the pixels were empirically determined as the strong object ``edges'', with the bottom 10\% being determined as noise or superfluous detail ``edges''. The remaining 70\% of the pixels were evenly split into $b_{e}-1$ groups of so-called significant detail ``edges''. As the gradient histogram was found to typically follow a low-variance poission-like distribution with right skew, these percentage bounds were found to empirically average the distribution rise with the bottom 10\%, the long tail with the top 20\%, and the majority of the distribution with the middle 70\%. This was an empirical development that is fast, efficient, and has been found to provide useful and conceptually valid ``edges'' in the realistic test images. A visualization of this quantization is shown in Figure \ref{gradienthistogram}.
+The top 20\% of the pixels were empirically determined as the strong object ``edges'', with the bottom 10\% being determined as noise or superfluous detail ``edges''. The remaining 70\% of the pixels were evenly split into $b_{e}-1$ groups of so-called significant detail ``edges''. As the gradient histogram was found to typically follow a low-variance Poisson-like distribution with right skew. These percentage bounds were found to empirically average the distribution rise with the bottom 10\%, the long tail with the top 20\%, and the majority of the distribution with the middle 70\%. This was an empirical development that is fast, efficient, and has been found to provide useful and conceptually valid ``edges'' in the realistic test images. A visualization of this quantization is shown in Figure \ref{gradienthistogram}.
+
+\begin{equation}
+p = \left( \frac{\partial R}{\partial x} \right)^{2} +
+	\left( \frac{\partial G}{\partial x} \right)^{2} +
+	\left( \frac{\partial B}{\partial x} \right)^{2}
+\label{ColorGradientP}
+\end{equation}
+
+\begin{equation}
+q = \left( \frac{\partial R}{\partial y} \right)^{2} +
+	\left( \frac{\partial G}{\partial y} \right)^{2} +
+	\left( \frac{\partial B}{\partial y} \right)^{2}
+\label{ColorGradientQ}
+\end{equation}
+
+\begin{equation}
+t = \frac{\partial R}{\partial x}\cdot\frac{\partial R}{\partial y} + 
+	\frac{\partial G}{\partial x}\cdot\frac{\partial G}{\partial y} +
+	\frac{\partial B}{\partial x}\cdot\frac{\partial B}{\partial y}
+\label{ColorGradientT}
+\end{equation}
+
+In order to generate the gradient map, as characterized by the distribution in Figure \ref{gradienthistogram}, the maps of Equations \ref{ColorGradientP}-\ref{ColorGradientT} must be calculated. In the MATLAB\textsuperscript{\textregistered} and OpenCV implementations, the Sobel operator was chosen to generate the partial derivatives in the $x$ and $y$ directions. These maps, as mentioned, make up the components $(x,y)$-space to $(R,G,B)$-space vector field matrix as shown in Equation \ref{DTDmatrix}.
+
+\begin{equation}
+D^{T}D = 
+\begin{bmatrix}
+p & t \\ t & q
+\end{bmatrix}
+\label{DTDmatrix}
+\end{equation}
+
+The gradient map is then calculated, at each pixel location, by taking that pixel location's $D^{T}D$ array and finding its maximum eigenvalue. The achievements of Lee and Cok \cite{Lee1991} simplify this by producing a closed-form solution to that array's maximum eigenvalue. Therefore, through the use of Equation \ref{maxEigenvalue}, there is no need for any Singular Value Decomposition or Eigenvalue determination, and through array operations the gradient map is directly calculated as $\tilde{\lambda}$.
+
+\begin{equation}
+\tilde{\lambda} = \sqrt{ \frac{1}{2} \cdot \left( p + q + \sqrt{ (p+q)^2 - 4 \cdot ( p \cdot q - t^2 ) } \right) }
+\label{maxEigenvalue}
+\end{equation}
+
+The $\tilde{\lambda}$ map/image is normalized to its peak value and quantized (if not explicitly done so) to a 64-bpp array. The notation of these equations follows \cite{Lee1991} directly, to avoid confusion. Again, this is then built off of only two convolution operations, the vertical and horizontal Sobel kernel, and the map itself can be directly calculate without any Eigenvalue or SVD operations, thereby avoiding the calculation of an $\mathfrak{m} \times \mathfrak{n}$ matrix (pseudo-)inverse.
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
