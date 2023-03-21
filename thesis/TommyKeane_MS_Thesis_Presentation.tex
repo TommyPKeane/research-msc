@@ -3,8 +3,9 @@
 % Tommy P. Keane
 % Master of Science Thesis
 % Department of Electrical and Microelectronic Engineering
+% Rochester Institute of Technology
 %
-% May 2011
+% Presented: May 12, 2011
 %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \documentclass{beamer}
@@ -15,8 +16,10 @@
 \usepackage{amssymb}
 \usepackage{xfrac}
 \usepackage{graphicx}
-\graphicspath{{./images}}
+\graphicspath{{./images/}}
 \usepackage{subfigure}
+
+\usepackage{eulervm}
 
 \bibliographystyle{unsrt}
 
@@ -115,16 +118,20 @@ Create an automated algorithm for registering, stitching, and blending the views
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% WHAT IS BEING PRESENTED?
-\begin{frame}[t]{\sc What is being presented?}
+% WHAT HAS BEEN ACHIEVED?
+\begin{frame}[t]{\sc What has been achieved?}
 
+\vfill
 \begin{center}
-{\sc Achieved}:
+{\sc Weighted and Filtered Mutual Information (WFMI)}:
 \\
-A novel application of mutual information as a metric for determining overlapping portions of unconstrained views of realistic scenes.
+A novel application of mutual information as a metric for determining overlapping portions of unconstrained views of complex, realistic scenes.
 \\
-\vskip 1in
-MATLAB\textsuperscript{\textregistered}, C++ with OpenCV
+\vskip .25in
+Implementation in MATLAB\textsuperscript{\textregistered}, C++ with OpenCV
+\\
+\vskip .25in
+Intellectual Property held by \\ Lenel Systems Inc., A UTC Fire and Security Corporation.
 \end{center}
 
 \end{frame}
@@ -135,74 +142,24 @@ MATLAB\textsuperscript{\textregistered}, C++ with OpenCV
 % WHAT IS BEING PRESENTED?
 \begin{frame}[t]{\sc What is being presented?}
 
-\begin{center}
+\vfill
 
-{\sc Achieved}:
-\\
 \begin{description}
-\item[Mutual Information]
-\item[Image Registration]
-\item[Motion Estimation]
-\item[Depth Determination]
-\item[The WFMI Algorithm]
-\item[Review and Proposal]
+\item[Multiple View Geometry] \hspace*{\fill} \\
+System description and constraints.
+
+\item[Mutual Information] \hspace*{\fill} \\
+The how and why of the applied theory.
+
+\item[Image Features] \hspace*{\fill} \\
+What are they and how are they chosen?
+
+\item[The Proposed Algorithm] \hspace*{\fill} \\
+The design and implementation.
+
+\item[Results and Constraints] \hspace*{\fill} \\
+Synthetic and real-world examples and achievements.
 \end{description}
-
-\end{frame}
-
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% MUTUAL INFORMATION 001
-\begin{frame}[c]{\sc Mutual Information}
-
-\begin{figure}
-\centering
-\includegraphics[height=.7\textheight]{informationTheory}
-\caption{Venn diagram of key measures in Information Theory}
-\label{infoTheory}
-\end{figure}
-
-
-\end{frame}
-
-
-% MUTUAL INFORMATION 002
-\begin{frame}[c]{\sc Mutual Information}
-
-\textbf{Entropy}: The expected value of the self-information, thought of as the measure of randomness in the image data.
-\begin{equation}
-\label{entropy}
-	H(A) = \sum_{i}{p_{A}(a_{i}) \log_{n}{\left(p_{A}(a_{i})\right)}}
-\end{equation}
-
-\vfill
-
-\textbf{Probability Mass Function (PMF)}: The distribution of the random data in an image, shown as the normalized histogram of the image data.
-\begin{equation}
-\label{PMF}
-	p_{A}(\bf{a})=h_{A}(\bf{a}) \cdot \left(\sum_{i}{h_{A}(a_{i})} \right)^{-1} = \frac{h_{A}(\bf{a})}{\mathfrak{m}\cdot\mathfrak{n}}
-\end{equation}
-
-
-\end{frame}
-
-
-% MUTUAL INFORMATION 003
-\begin{frame}[c]{\sc Mutual Information}
-
-\textbf{Mutual Information}: The expected value of the ratio of the joint distribution to the product of the marginal distributions. This is thought of as the amount of knowledge that can be obtained about an image from knowledge about another image.
-\begin{equation}
-\label{MutualInformation}
-	I(A;B) = \sum_{j}{\sum_{i}{p_{AB}(a_{i},b_{j}) \log_{2}{\left( \frac{p_{AB}(a_{i},b_{j})}{p_{A}(a_{i})p_{B}(b_{j})}\right)}}}
-\end{equation}
-
-\vfill
-
-\textbf{Normalized Mutual Information}: Also known as Symmetric Uncertainty.
-\begin{equation}
-\label{NormalizedMutualInformation}
-	I_{N}(A;B) = \left( \frac{2}{H(A) + H(B)}\right) \cdot I(A;B)
-\end{equation}
 
 \end{frame}
 
@@ -224,6 +181,7 @@ MATLAB\textsuperscript{\textregistered}, C++ with OpenCV
 
 
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % IMAGE REGISTRATION 002
 \begin{frame}[c]{\sc Finding Homographies}
 
@@ -245,14 +203,15 @@ MATLAB\textsuperscript{\textregistered}, C++ with OpenCV
 
 
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % IMAGE REGISTRATION 003
 \begin{frame}[t]{\sc Solving for Homographies}
 
 \textbf{Direct Linear Transformation}:
 
 \begin{center}
-Method for solving for Homography relating pixels between two images.
 
+\vskip -0.15in
 \begin{equation}
 \label{DLT}
 	A=\hat{\bf{x}}_{i} \times H \bf{x}_{i}=0
@@ -271,6 +230,170 @@ Method for solving for Homography relating pixels between two images.
 \end{center}
 
 \end{frame}
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Describing Image Data
+\begin{frame}[c]{\sc Describing Image Data}
+
+\begin{figure}
+\centering
+\subfigure{\includegraphics[width=.48\columnwidth]{sampleImages}}
+\pause
+\subfigure{\includegraphics[width=.48\columnwidth]{sampleHistogram}}
+\label{infoTheory2}
+\end{figure}
+
+\begin{block}<3->{Intensity Histogram}
+Spatial data has been encoded, but cannot be uniquely decoded
+\end{block}
+
+
+\end{frame}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% DESCRIBING RANDOM VARIABLES
+\begin{frame}[c]{\sc Describing Random Variables}
+
+
+\begin{block}<1->{Probability Mass Function (PMF)}
+The distribution of the random data in an image, found from the normalized histogram of the image data.
+\begin{equation}
+\label{PMF}
+	p_{A}(\bf{a})=h_{A}(\bf{a}) \cdot \left(\sum_{i}{h_{A}(a_{i})} \right)^{-1} = \frac{h_{A}(\bf{a})}{\mathfrak{m}\cdot\mathfrak{n}}
+\end{equation}
+\end{block}
+
+\vfill
+
+\begin{block}<2->{Entropy}
+The expected value of the self-information, thought of as the measure of randomness in the image data.
+\begin{equation}
+\label{entropy}
+	H(A) = - \sum_{i}{p_{A}(a_{i}) \log_{n}{\left(p_{A}(a_{i})\right)}}
+\end{equation}
+\end{block}
+
+\end{frame}
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% WHY RANDOMNESS
+\begin{frame}[c]{\sc Why Randomness?}
+
+\only<1>
+{\begin{figure}
+\centering
+\includegraphics[height=.8\textheight]{PinkBlock}
+\label{infoTheory3}
+\end{figure}
+}
+
+\only<2>
+{\begin{figure}
+\centering
+\includegraphics[height=.8\textheight]{NoiseBlock}
+\label{infoTheory3}
+\end{figure}
+}
+
+\end{frame}
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% DIAGRAM OF INFORMATION THEORY
+\begin{frame}[c]{\sc Diagram of Information Theory}
+
+\begin{figure}
+\centering
+\includegraphics[height=.7\textheight]{InformationTheoryVenn}
+\caption{Venn diagram of key measures in Information Theory}
+\label{infoTheory3}
+\end{figure}
+
+\end{frame}
+
+
+
+% Understanding Information Theory
+\begin{frame}[c]{\sc Understanding Information Theory}
+
+\vskip -.25in
+\begin{figure}
+\centering
+\subfigure{\includegraphics[width=.50\columnwidth]{InformationTheory3D_L}}
+\subfigure{\includegraphics[width=.485\columnwidth]{InformationTheory3D_R}}
+\label{infoTheory2}
+\end{figure}
+
+\vskip -.25in
+
+\begin{equation}
+H(A|B) = H(A,B) - H(B)
+\end{equation}
+
+\begin{equation}
+H(B|A) = H(A,B) - H(A)
+\end{equation}
+
+\end{frame}
+
+
+
+
+% Understanding Information Theory
+\begin{frame}[c]{\sc Understanding Information Theory}
+
+\vskip -.25in
+\begin{figure}
+\centering
+\subfigure{\includegraphics[width=.48\columnwidth]{InformationTheory3D}}
+\subfigure{\includegraphics[width=.48\columnwidth]{InformationTheoryVenn}}
+\label{infoTheory2}
+\end{figure}
+
+\begin{equation}
+I(A;B) = H(A) + H(B) - H(A,B)
+\end{equation}
+
+\end{frame}
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% MUTUAL INFORMATION
+\begin{frame}[c]{\sc Calculating Mutual Information}
+
+\begin{block}<1->{Mutual Information}
+The amount of knowledge that can be obtained about an image from knowledge about another image.
+
+\begin{equation}
+\label{MutualInformation}
+	I(A;B) = \sum_{j}{\sum_{i}{p_{AB}(a_{i},b_{j}) \log_{2}{\left( \frac{p_{AB}(a_{i},b_{j})}{p_{A}(a_{i})p_{B}(b_{j})}\right)}}}
+\end{equation}
+%The difference between the expected value of the joint distribution self-information in the cases of dependence and independence.
+\end{block}
+
+
+\vfill
+
+\begin{block}<2->{Normalized Mutual Information}
+Symmetric Uncertainty.
+
+\begin{equation}
+\label{NormalizedMutualInformation}
+	I_{N}(A;B) = \left( \frac{2}{H(A) + H(B)}\right) \cdot I(A;B)
+\end{equation}
+\end{block}
+
+\end{frame}
+
+
+
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -592,7 +715,7 @@ Method for solving for Homography relating pixels between two images.
 % REFERENCES
 \begin{frame}[allowframebreaks]{\sc References}
 \tiny
-\bibliography{./TommyKeane_MS_Thesis_Bibliography}
+\bibliography{../LaTeX_Thesis/TommyKeane_MS_Thesis_Bibliography}
 \nocite{*}
 \end{frame}
 
