@@ -1,6 +1,6 @@
 # "Weighted and Filtered Mutual Information: A metric for the automated creation of panoramas from views of complex scenes"
 
-Thesis for M.Sc. (_Magister Scientiae_) Degree in Electrical Engineering. Originally defended and published in June of 2011.
+Thesis for M.Sc. (_Magister Scientiae_) Degree in Electrical Engineering. Originally defended and published in June of 2011 -- [RIT Thesis Publication](https://scholarworks.rit.edu/theses/7468/).
 
 <!-- MarkdownTOC -->
 
