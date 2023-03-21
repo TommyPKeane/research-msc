@@ -1,0 +1,40 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+% Tommy P. Keane
+% Master of Science Thesis
+% Department of Electrical and Microelectronic Engineering
+%
+% March 2011
+%
+%
+%
+% .tex and .sty modified from:
+% http://www.ce.rit.edu/studentresources/gradresource/LaTexThesis.zip
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+% CHAPTER 1
+%
+% SECTION 4
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% BEGIN DOCUMENT
+
+This algorithm has been developed for indoor and outdoor security surveillance purposes, but holds a lot of more general theoretical and practical weight. In security applications the goal is to avoid equipment costs and confusions, specifically in viewing multiple scenes simultaneously. The popular culture imagery of a wall of surveillance monitors is often used to comic effect in film and television, but it is a reality that the standard method of viewing multiple video sources simultaneously is to use multiple physical monitors or multiple software application windows. A panorama may tend to lend itself to personal entertainment or aesthetic aims: a beautiful skyline, a continuous horizon, or a dramatic depiction of a city or place; yet there is a very practical, very substantial, and very useful application in the security field and many other areas of research and visual observation.
+
+A panorama can avoid the use of those multiple monitors or multiple windows, thus allowing for a whole area to be viewed not only simultaneously but also contiguously. Even with a spatially aware arrangement of monitors or windows, or having the views observed by an individual very knowledgeable of the scene, a disjoint view lends itself to disjoint perception and understanding. A blended panorama created from multiple-views with parallax and occlusion artifacts closely follows our own human visual system's means of perceiving the world \ref{Palmer}, and so these are by no means preventative to creating a convincing view. Thus by creating a contiguous, coherent, and convincing view, the users and operators can eliminate one more step in processing the scene(s) and extracting the useful information (computationally or cognitively). This is not only for watching surveillance videos, but also for storing and processing important scenes, for which this algorithm provides substantial, foundational improvements that lend themselves to other areas of image and scene processing.
+
+For example, a multi-view tracking algorithm becomes a single-view problem when all views are registered. And any motion-based algorithm is provided with more causal data, creating a robust initial data state for any type of memory-based framework, as modern video algorithms tend to be computationally exhausting. Surveillance systems often implement algorithms for spatial detection, awareness, and warnings, such as a watchdog system that provides an alert when objects enter a secured area. Systems such as these are limited by their views, and by the data provided. A spatially contiguous and temporally coherent panorama of a scene involving a series of distinct camera views with minimum overlap can allay that concern by expanding the input data set for automated scene description and analysis algorithms. Panoramas, in this context, are expanded data sets. Especially considering that video data contains spatio-temporal information regarding scenes, and without accurate spatial and temporal relationships the conglomeration of multiple videos to constitute a data set becomes a hindrance to generating or applying accurate tracking and motion algorithms. The results of applying the WFMI algorithm to scenes with parallax and occlusion will produce useful results, especially for objects in motion as they pass from one view through the overlap and into the other. Utilizing unregistered video or image sets is akin to utilizing data sets in different units of measure. It's not generally an ill-posed problem, yet it is a system requiring an extra step of accurate registration to make sure its data lies in a consistent domain. Granted, this algorithm is not eliminating a processing step, but it is providing an automated and accurate enhancement (or alternative) to contemporary techniques. Mosaicking will fail in surveillance motion or tracking algorithsm because it provides no temporal coherence; and while overly redundant data sets (large overlaps from many cameras) could simplify this process, they are a front-end and continued maintenance cost added to the implementation. Pixel-to-pixel registration algorithms in complex scenarios can often be too theoretically restricted to provide useful results, especially in object tracking when occlusion is present. Utilizing an algorithm that can overcome parallax and occlusion concerns can provide a better understanding of object motion and spatial arrangements in the views of the scene. This not only assures a better data set but a more intelligent data set.
+
+The WFMI algorithm is best lent to an application where modern means of registration and panorama creation are too academically or scientifically stringent in their conditions, too computationally complex, or too cost prohibitive in the required hardware (largely overlapping views) or software licensing (patent concerns). Surveillance was the intended application for this algorithm, but the following discussion of the implementation will show that any system with minimal \textit{a priori} scene knowledge and a need for unsupervised automation will find a solution here. Again, there are limitations, to be discussed later on in Chapter 4.
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% END OF DOCUMENT
+

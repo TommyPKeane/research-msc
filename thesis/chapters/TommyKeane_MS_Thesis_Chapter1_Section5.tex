@@ -1,0 +1,38 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+% Tommy P. Keane
+% Master of Science Thesis
+% Department of Electrical and Microelectronic Engineering
+%
+% March 2011
+%
+%
+%
+% .tex and .sty modified from:
+% http://www.ce.rit.edu/studentresources/gradresource/LaTexThesis.zip
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+% CHAPTER 1
+%
+% SECTION 5
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% BEGIN DOCUMENT
+
+The WFMI algorithm was written initially in MATLAB\textsuperscript{\textregistered}; then it was ported over for Lenel Systems, Inc. (the grant provider) to an implementation in C++ through the use of the OpenCV library. The MATLAB\textsuperscript{\textregistered} development environment proved an excellent prototyping system that allowed exploration and testing concurrent with theoretical development. This did result in longer run-times and tended towards minor computational bloat, but during that stage of the research the goal was proof-of-concept, while providing a path for future work that could eventually move towards real-time processing. However, several optimizations were made to continue on schedule and these are important and potentially useful optimizations that will be discussed further as they come up in the following development. Since this project was funded through a corporate grant, it was designed for corporate review/preview and was ultimately implemented into the grant provider's system to be sold as part of their product. This pushed the design towards their system's constraints and their user base's practical needs, while maintaining a robust scientific and theoretical foundation. As previously mentioned, this algorithm has been designed for surveillance but as will be discussed in Chapter 6, its concepts are more widely applicable in the field of automated image registration.
+
+The MATLAB\textsuperscript{\textregistered} implementation went through several initial rewrites, and the first stage of development was dedicated to a MATLAB\textsuperscript{\textregistered} based computationally efficient algorithm. For example, the translation and mutual information search portions of the algorithm were cut down from an initial computational time of 2 hours to less than 10 seconds. This was motivated by scheduling and concerns with developing the theory in concurrence with testing, but also provided insight into the theoretical development. The OpenCV implementation was not optimized for C++ at the time of this research, but did take advantage of some of the algorithmic enhancements that were applied in the MATLAB\textsuperscript{\textregistered} prototyping development. These will be discussed in detail in Chapter 4.
+
+Again, this algorithm should be introduced as an algorithm where the most of its contributions to the scientific knowledge base were found in its implementation and development to a very general and complex problem. Chapter 4 will dive deeper into the details of the implementation, but it should be noted that the MATLAB\textsuperscript{\textregistered} and OpenCV implementations truly complemented each other in providing a deeper understanding that produced the final algorithm and the theory to be discussed here. After having a working algorithm in MATLAB\textsuperscript{\textregistered}, the development process for the translation to OpenCV provided significant scientific and theoretical insight into the limitations and abilities of the algorithm and its foundations given the strict memory and type constraints in C++ compared to MATLAB\textsuperscript{\textregistered}.
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% END OF DOCUMENT
+

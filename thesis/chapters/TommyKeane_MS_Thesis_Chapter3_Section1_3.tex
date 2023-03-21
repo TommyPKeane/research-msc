@@ -1,0 +1,108 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+% Tommy P. Keane
+% Master of Science Thesis
+% Department of Electrical and Microelectronic Engineering
+%
+% March 2011
+%
+%
+%
+% .tex and .sty modified from:
+% http://www.ce.rit.edu/studentresources/gradresource/LaTexThesis.zip
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+% CHAPTER 3
+%
+% SECTION 1.3
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% BEGIN DOCUMENT
+
+Up to this point the discussion of mutual information has described it as a measure based on random variables. Those random variables were then attributed to the sets of feature values in digital images. Thus making mutual information a mapped measurement, meaning that with two digital images and their set of features mapped in the respective image spaces, the mutual information could be found between overlapping sets of features as the images are put through various spatial transformations. By applying a non-translational affine transformation (i.e. a combination of skewing, scaling, and rotation) the images can be put through a brute force translation search that creates a mutual information measurement for each translation, since each translation provides a new overlap region with the feature images.
+
+Map size $M \times N = (2\mathfrak{m}-1) \times (2\mathfrak{n}-1)$
+
+\begin{equation}
+\label{WeightedInformation}
+	I_{w}(A,B)=w(A,B) \cdot I(A,B)
+\end{equation}
+
+
+\begin{equation}
+\label{}
+w(A,B)=\sum_{j}\sum_{i}{h_{A}(a_{i})h_{B}(b_{j})}
+\end{equation}
+
+
+\begin{equation}
+\label{}
+A_{u}=\{x,y\}_{u} \rightarrow \left\{ \mathcal{O}_{T}\left(\mathcal{A}(x,y) \right) \right\}_{u} 
+\end{equation}
+
+
+\begin{equation}
+\label{}
+B_{v}=\{x,y\}_{v} \rightarrow \left\{ \mathcal{O}_{T}\left(\mathcal{A}(x,y) \right) \right\}_{v}
+\end{equation}
+
+
+\begin{equation}
+\label{}
+\mathfrak{w}(A,B)=\sum_{j}\sum_{i}{h_{A_{u}}(a_{i})h_{B_{v}}(b_{j})}
+\end{equation}
+
+\begin{equation}
+\label{}
+\mathfrak{I}(u,v)=I(A_{u},B_{v})=\left(\frac{2}{H(A_{u})+H(B_{v})}\right)
+\end{equation}
+
+
+\begin{equation}
+\label{WeightedInformation}
+	\mathfrak{I}_{\mathfrak{w}}(u,v)=\mathfrak{w}(u,v) \cdot \mathfrak{I}(u,v)
+\end{equation}
+
+
+\begin{equation}
+\label{laplacianFilter}
+	L(u,v)=\frac{4}{(\alpha + 1)} \cdot
+	\begin{bmatrix}
+		\frac{\alpha}{4} & \frac{(1-\alpha)}{4} & \frac{\alpha}{4} \\
+		\frac{(1-\alpha)}{4} & -1 & \frac{(1-\alpha)}{4} \\
+		\frac{\alpha}{4} & \frac{(1-\alpha)}{4} & \frac{\alpha}{4}
+	\end{bmatrix}, \quad \alpha \in [0,1)
+\end{equation}
+
+\begin{equation}
+\label{FilteredWeightedInformation}
+	\mathfrak{I}_{L\mathfrak{w}}(u,v)=L(u,v) \ast \mathfrak{I}_{\mathfrak{w}}(u,v)
+\end{equation}
+
+\begin{equation}
+\label{peakLocation}
+	(\delta_{x},\delta_{y})=\max_{u,v}\left(\mathfrak{I}_{L\mathfrak{w}}\right)
+\end{equation}
+
+\begin{equation}
+\label{peakTranslation}
+	(t_{x},t_{y})=(k,l) \cdot \left| (\delta_{x},\delta_{y}) - (M,N) \right|
+\end{equation}
+
+\begin{equation}
+\label{peakTranslation}
+	[k,l] = \left[ \left| (\delta_{x},\delta_{y}) - (M,N) \right| \le (M,N) \right] - [1,1]
+\end{equation}
+
+From the vector Equation \ref{peakTranslation}, $k$ and $l$ will be either $-1$ or $1$.
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% END OF DOCUMENT
+

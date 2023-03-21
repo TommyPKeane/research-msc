@@ -1,0 +1,467 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+% Tommy P. Keane
+% Created for Master of Science Thesis
+% Department of Electrical and Microelectronic Engineering
+%
+% http://www.tommypkeane.com
+%
+% March 21 2011
+%
+%
+% Modified from:
+% http://www.ce.rit.edu/studentresources/gradresource/LaTexThesis.zip
+%
+% Which was based on:
+% Oregon Graduate Institute Thesis Style
+%
+% Which was based on:
+% Stanford University Thesis Style
+%
+% Help in coding from examples at:
+% http://theoval.cmp.uea.ac.uk/~nlct/latex/thesis/node10.html
+% http://en.wikibooks.org/wiki/Latex
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+% %%%%%%%%%%%%%%%%%%%%%%%%%
+% ASSERT: \documentstyle[]{report}
+
+\@ifundefined{chapter}
+{
+	\@latexerr{Need to use 'chapter' command}
+	{You should be using the 'report' document style}
+}{}
+
+
+
+% %%%%%%%%%%%%%%%%%%%%%%%%%
+% MARGIN SETUP
+
+\topmargin -0.25in
+\advance \topmargin by -\headheight
+\headsep 0.5in
+\textheight 8.5in
+\oddsidemargin 0.3in
+\evensidemargin 0.3in
+\marginparwidth 40pt
+\marginparsep 10pt
+\textwidth 6.5in
+
+
+
+
+% %%%%%%%%%%%%%%%%%%%%%%%%%
+% PAGE BREAK PENALTY
+
+\brokenpenalty=10000
+
+
+
+% %%%%%%%%%%%%%%%%%%%%%%%%%
+% FOOTNOTE SINGLE SPACING
+
+\long\def\@footnotetext#1
+{
+	\insert
+	\footins
+	{
+		\def\baselinestretch{1}
+		\footnotesize
+    		\interlinepenalty
+		\interfootnotelinepenalty
+    		\splittopskip
+		\footnotesep
+    		\splitmaxdepth \dp\strutbox \floatingpenalty \@MM
+    		\hsize\columnwidth \@parboxrestore
+   		\edef\@currentlabel
+		{
+			\csname p@footnote\endcsname\@thefnmark
+		}
+		\@makefntext
+    	{
+			\rule{\z@}{\footnotesep}
+			\ignorespaces
+      		#1\strut
+		}
+	}
+}
+
+\skip \footins 20pt plus4pt minus4pt
+
+
+
+
+
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% TABLE OF CONTENTS DOTTED LINES
+
+\renewcommand\l@chapter[2]
+{
+	\ifnum \c@tocdepth >\m@ne
+    		\addpenalty{-\@highpenalty}%
+    		\vskip 1.0em \@plus\p@
+    		\setlength\@tempdima{1.5em}%
+    		\begingroup
+      		\parindent \z@ \rightskip \@pnumwidth
+      		\parfillskip -\@pnumwidth
+      		\leavevmode
+      		\advance \leftskip\@tempdima
+      		\hskip -\leftskip
+      		{\bfseries #1}
+			\nobreak
+			\leaders
+			\hbox
+			{$
+				\m@th
+				\mkern
+				\@dotsep mu.\mkern
+	 			\@dotsep mu
+			$}
+	 		\hfill
+			\nobreak
+             \hbox to\@pnumwidth{\hss \bfseries #2}\par
+      		\penalty\@highpenalty
+    		\endgroup
+	\fi
+}
+
+
+
+
+
+% %%%%%%%%%%%%%%%%%%%%%%%%%
+% FRONT MATTER MACROS
+
+\def\titleline#1{\gdef\@titleline{#1}}
+\def\prevdegrees#1{\gdef\@prevdegrees{#1}}
+\def\@titleline{}
+\def\@prevdegrees{}
+\def\dept#1{\gdef\@dept{#1}}
+\def\thesistype#1{\gdef\@thesistype{#1}}
+
+\def\firstreader#1#2{\gdef\@firstreader{#1}\gdef\@firsttitle{#2}}
+\def\secondreader#1#2{\gdef\@secondreader{#1}\gdef\@secondtitle{#2}}
+\def\thirdreader#1#2{\gdef\@thirdreader{#1}\gdef\@thirdtitle{#2}}
+\def\fourthreader#1#2{\gdef\@fourthreader{#1}\gdef\@fourthtitle{#2}}
+
+\def\grantdate#1#2{\gdef\@grantmonth{#1}\gdef\@grantyear{#2}}
+
+\def\@title{}
+\def\@author{}
+\def\@dept{Electrical and Microelectronic Engineering}
+\def\@firstreader{}
+\def\@secondreader{}
+\def\@thirdreader{}
+\def\@fourthreader{}
+
+
+
+
+% %%%%%%%%%%%%%%%%%%%%%%%%%
+% CONDITIONALS
+
+\newif\ifcopyright
+\newif\iffigurespage
+\newif\iftablespage
+\newif\iffoursigs
+\newif\iffivesigs
+\newif\ifMSthesis
+
+
+
+
+% %%%%%%%%%%%%%%%%%%%%%%%%%
+% SET CONDITIONS
+
+\copyrighttrue
+\figurespagetrue
+\tablespagetrue
+\foursigsfalse
+\fivesigsfalse
+\MSthesisfalse
+
+
+
+
+% %%%%%%%%%%%%%%%%%%%%%%%%%
+% ADVISOR SIGNATURES
+
+\long\def\signature#1#2#3{{#1}: \rule{5in}{1pt} \vskip.1in {#2} {--} {#3} }
+
+\def\signatures
+{
+	\vfill
+	\signature{\@firsttitle}{\em Thesis Advisor}{\@firstreader}
+	\vskip.5in
+	\signature{\@secondtitle}{\em Thesis Advisor}{\@secondreader}
+	\vskip.5in
+	\signature{\@thirdtitle}{\em Thesis Advisor}{\@thirdreader}
+	\vskip.5in
+	\signature{\@fourthtitle}{\em Head of the Department of \@dept}{\@fourthreader}
+	\vskip.3in
+	\vfill
+}
+
+
+
+
+% %%%%%%%%%%%%%%%%%%%%%%%%%
+% SHORT SIGNATURES
+
+\long\def\shortSignature#1#2{ {#1}: \rule{#2}{1pt} }
+
+
+
+
+
+% %%%%%%%%%%%%%%%%%%%%%%%%%
+% TITLE PAGE WITH SIGNATURES
+\def\titlep
+{
+	\large
+    \vspace*{-.5in}
+	\thispagestyle{empty}
+	\def\baselinestretch{1.1}
+	\null
+	\begin{center}
+		\huge \sc{\@title} \\ [0.2in]
+	\end{center}
+
+	\begin{center}
+		\large by \\ [0.2in] {\Large \bf \@author \rm }\\ [0.3in]
+		\@prevdegrees
+	\end{center}
+
+	\gdef\thesistype{thesis}
+	\gdef\degreeType{Master of Science}
+	\gdef\degreeSymbol{M.S.}
+	
+	\begin{center}
+		\large
+		A thesis submitted in partial fulfillment of the requirements for the degree of
+		\newline
+        \textsc{ \degreeType \\ in \\ \@dept \\ [0.3in] }
+	\end{center}
+
+	\vskip.3in
+	\signatures
+	
+	\begin{center}
+		Department of \@dept \\
+		Kate Gleason College of Engineering \\
+		\textsc{ Rochester Institute of Technology} \\
+		Rochester, New York \\
+			\@grantmonth { } \@grantyear
+	\end{center}
+	\vskip.5in
+	
+	\clearpage
+	
+		
+
+% %%%%%%%%%%%%%%%%%%%%%%%%%
+% RELEASE PAGE
+
+	\begin{onehalfspace}
+	\noindent
+	\textbf{ Thesis Author Permission Statement}
+	
+	\vskip.25in
+		
+	\noindent
+	\begin{tabular}{ l p{5in} }
+		Title of Thesis: & \textit{\@titleline} \\
+		Author: & \@author \\
+		Degree: & Master of Science \\
+		Program: & Electrical Engineering \\
+		College: & Kate Gleason College of Engineering \\ [0.3in]
+	\end{tabular}
+
+    	\vskip-.15in
+    		
+	I understand that I must submit a print copy of my thesis or dissertation to the RIT Archives, per current RIT guidelines for the completion of my degree. I hereby grant to the Rochester Institute of Technology and its agents the non-exclusive license to archive and make accessible my thesis or dissertation in whole or in part in all forms of media in perpetuity. I retain all other ownership rights to the copyright of the thesis or dissertation. I also retain the right to use in future works (such as articles or books) all or part of this thesis or dissertation.
+    
+    	\vskip.05in
+    		
+	\noindent
+	\textbf{ \textit{Print Reproduction Permission Granted:} }
+	
+		
+	\indent
+	I, \@author, hereby {\bf grant permission} to the Rochester Institute of Technology to reproduce my thesis or dissertation in whole or in part. Any reproduction will not be for commercial use or profit.
+
+    	\vskip.25in
+    		
+	\shortSignature{Author}{3in} \quad \shortSignature{Date}{1.5in}
+    
+    	\vskip.25in
+    
+    	\noindent
+	\textbf{ \textit{Inclusion in the RIT Digital Media Library Electronic Thesis \& Dissertation (ETD) Archive:} }
+	
+	\indent
+	I, \@author, additionally grant to the Rochester Institute of Technology Digital Media Library (RIT DML) the non-exclusive license to archive and provide electronic access to my thesis or dissertation in whole or in part in all forms of media in perpetuity.
+    
+    	\indent
+	I understand that my work, in addition to its bibliographic record and abstract, will be available to the world-wide community of scholars and researchers through the RIT DML. I retain all other ownership rights to the copyright of the thesis or dissertation. I also retain the right to use in future works (such as articles or books) all or part of this thesis or dissertation. I am aware that the Rochester Institute of Technology does not require registration of copyright for ETDs.
+    
+    	\indent
+	I hereby certify that, if appropriate, I have obtained and attached written permission statements from the owners of each third party copyrighted matter to be included in my thesis or dissertation. I certify that the version I submitted is the same as that approved by my committee.
+    
+    	\vskip.25in
+    
+    	\shortSignature{Author}{3in} \quad \shortSignature{Date}{1.5in}
+	\end{onehalfspace}
+}
+
+
+
+
+% %%%%%%%%%%%%%%%%%%%%%%%%%
+% PREFACE PAGES
+\def\beforepreface
+{
+	\pagenumbering{roman}
+	\thispagestyle{myheadings}
+	\pagestyle{myheadings}
+    \markboth{}{}
+	\titlep
+}
+
+\def\prefacesection#1
+{
+    \thispagestyle{myheadings}
+    \markboth{}{}
+	\chapter*{#1}
+%	\addcontentsline{toc}{chapter}{#1}
+}
+
+\def\afterpreface
+{
+  	\begin{center}
+  	\newpage
+	
+	\begin{singlespace}
+		\tableofcontents
+	\end{singlespace}
+	\newpage
+	
+	\iftablespage
+		\begin{doublespace}
+			\listoftables
+		\end{doublespace}
+		\newpage
+	\fi
+	
+	\iffigurespage
+		\begin{doublespace}
+			\listoffigures
+		\end{doublespace}
+		\newpage
+	\fi
+  
+  	\end{center}
+}
+
+
+% %%%%%%%%%%%%%%%%%%%%%%%%%
+% ABSTRACT
+\def\abstractpage
+{
+    \chapter*{Abstract}
+    \thispagestyle{myheadings}
+    \pagestyle{myheadings}
+    \markboth{}{}
+	\addcontentsline{toc}{chapter}{Abstract}
+}
+
+
+
+
+
+% %%%%%%%%%%%%%%%%%%%%%%%%%
+% DOCUMENT BODY
+\def\body
+{
+	\newpage
+	\pagenumbering{arabic}
+	\thispagestyle{myheadings}
+	\pagestyle{myheadings}
+    \markboth{}{}
+	\def\chaptermark##1{}
+}
+
+
+
+
+
+% %%%%%%%%%%%%%%%%%%%%%%%%%
+% BIBLIOGRAPHY
+\def\thebibliography#1
+{
+    \chapter*{\center References}
+    \list {[\arabic{enumi}]}
+    	{
+    		\settowidth\labelwidth{[#1]}\leftmargin\labelwidth
+    		\advance\leftmargin\labelsep \usecounter{enumi}
+	}
+    \usecounter{enumi}
+}
+
+\let\@ldthebibliography\thebibliography
+
+\renewcommand{\thebibliography}[1]
+{
+	\newpage
+    \thispagestyle{myheadings}
+    \markboth{}{}
+	\addcontentsline{toc}{chapter}{References}
+	\@ldthebibliography{#1}
+}
+
+
+
+
+
+% %%%%%%%%%%%%%%%%%%%%%%%%%
+% REDEFINE CHAPTER HEADINGS (\chapter)
+\renewcommand{\@makechapterhead}[1]
+{
+	\vspace{50\p@}
+	{
+		\parindent
+		\z@
+		\raggedright
+		\normalfont
+		\ifnum \c@secnumdepth >\m@ne
+			\huge\scshape \@chapapp\space \thechapter : \scshape #1\par
+			\par\nobreak
+		\fi
+		\vspace{5pt}
+		\hrule
+		\nobreak
+		\vskip 40\p@
+	}
+}
+
+
+
+
+% %%%%%%%%%%%%%%%%%%%%%%%%%
+% REDEFINE CHAPTER HEADINGS (\chapter*)
+\renewcommand{\@makeschapterhead}[1]
+{
+	\vspace*{-40\p@}
+  	{
+		\parindent
+		\z@
+		\raggedright
+    		\normalfont
+    		\interlinepenalty\@M
+    		\Huge \scshape #1\par
+    		\nobreak
+    		\vskip 10\p@
+  	}
+}

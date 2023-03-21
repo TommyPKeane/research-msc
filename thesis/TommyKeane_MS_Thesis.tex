@@ -1,0 +1,433 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+% Tommy P. Keane
+% Master of Science Thesis
+% Department of Electrical and Microelectronic Engineering
+%
+% March 2011
+%
+%
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+\documentclass[11pt]{report}
+\usepackage{subfigure}
+\usepackage[english]{babel}
+\usepackage{times}
+\usepackage{amssymb}
+\usepackage{amsmath}
+\usepackage{lscape}
+\usepackage{verbatim}
+\usepackage{enumerate}
+\usepackage{afterpage}
+\usepackage{subfigure}
+\usepackage{graphicx}
+\graphicspath{{./images/}}
+\usepackage{RIT_EEME_MS_ThesisStyle}
+\usepackage{setspace}
+
+
+\bibliographystyle{plain}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% BEGIN DOCUMENT
+
+\begin{document}
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% USEFUL ABBREVIATIONS
+
+\newcommand{\etc} {\emph{etc.\/}}
+\newcommand{\etal}{\emph{et~al.\/}}
+\newcommand{\eg}  {\emph{e.g.\/}}
+\newcommand{\ie}  {\emph{i.e.\/}}
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% TITLE
+% The \title{} can contain line breaks as appropriate...
+
+\title{\vspace{-0.20in}Weighted and Filtered Mutual Information:
+   \\
+   A metric for automated creation of panoramas from views of complex scenes}
+
+% The \titleline{} must have no line breaks in it.
+\titleline{Weighted and Filtered Mutual Information: A metric for automated creation of panoramas from views of complex scenes}
+
+% There should be no reason to change the \thesistype{} or the \MSThesistrue...
+\thesistype{Thesis}
+\MSthesistrue
+
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% AUTHOR
+% The \author{} should be exactly the same as your diploma
+
+\author{Thomas P. Keane}
+\dept{Electrical and Microelectronic Engineering}
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% COMMITTEE MEMBERS
+% The following information is for the signature page.
+
+\firstreader{REDACTED}{Professor}
+	%{Electrical and Microelectronic Engineering}
+\secondreader{REDACTED}{Professor}
+	%{Imaging Science}
+\thirdreader{REDACTED}{Professor}
+	%{Computer Engineering}
+\fourthreader{REDACTED}{Professor}
+	%{Electrical and Microelectronic Engineering}
+
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% DEFINE DATE
+
+\grantdate{March}{2011}
+
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% FRONT MATTER SETUP
+
+\beforepreface
+
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% DEDICATION
+
+\prefacesection{Dedication}
+
+\input{./TommyKeane_MS_Thesis_Dedication.tex}
+
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% ACKNOWLEDGMENTS
+
+\prefacesection{Acknowledgments}
+
+\input{./TommyKeane_MS_Thesis_Acknowledgments.tex}
+
+
+\afterpreface
+
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% ABSTRACT
+
+\abstractpage
+
+\input{./TommyKeane_MS_Thesis_Abstract.tex}
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% THESIS BEGINS
+\begin{doublespace}
+
+\body
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% CHAPTER 1
+\chapter{Introduction}
+
+\indent
+\input{./chapters/TommyKeane_MS_Thesis_Chapter1.tex}
+
+%************************************
+% SECTION 1.1
+\section{Objectives and Motivation}
+
+\indent
+\input{./chapters/TommyKeane_MS_Thesis_Chapter1_Section1.tex}
+
+%************************************
+% SECTION 1.2
+\section{Literature Review}
+
+\indent
+\input{./chapters/TommyKeane_MS_Thesis_Chapter1_Section2.tex}
+
+
+%************************************
+% SECTION 1.3
+\section{Contributions}
+
+\indent
+\input{./chapters/TommyKeane_MS_Thesis_Chapter1_Section3.tex}
+
+
+%************************************
+% SECTION 1.4
+\section{Applications}
+
+\indent
+\input{./chapters/TommyKeane_MS_Thesis_Chapter1_Section4.tex}
+
+
+%************************************
+% SECTION 1.5
+\section{Implementation}
+
+\indent
+\input{./chapters/TommyKeane_MS_Thesis_Chapter1_Section5.tex}
+
+
+%************************************
+% SECTION 1.6
+\section{Thesis Outline}
+
+\indent
+\input{./chapters/TommyKeane_MS_Thesis_Chapter1_Section6.tex}
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% CHAPTER 2
+\chapter{Background}
+
+\indent
+\input{./chapters/TommyKeane_MS_Thesis_Chapter2.tex}
+
+%************************************
+% SECTION 2.1
+\section{Symbol Conventions}
+
+\indent
+\input{./chapters/TommyKeane_MS_Thesis_Chapter2_Section1.tex}
+
+%************************************
+% SECTION 2.2
+\section{Digital Image Generation}
+
+\indent
+\input{./chapters/TommyKeane_MS_Thesis_Chapter2_Section2.tex}
+
+
+%************************************
+% SECTION 2.3
+\section{Histograms and Color Imagery}
+
+\indent
+\input{./chapters/TommyKeane_MS_Thesis_Chapter2_Section3.tex}
+
+
+%************************************
+% SECTION 2.4
+\section{Mutual Information}
+
+\indent
+\input{./chapters/TommyKeane_MS_Thesis_Chapter2_Section4.tex}
+
+
+%************************************
+% SECTION 2.5
+\section{Projective Camera Geometry}
+
+\indent
+\input{./chapters/TommyKeane_MS_Thesis_Chapter2_Section5.tex}
+
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% CHAPTER 3
+\chapter{Algorithm}
+
+\indent
+\input{./chapters/TommyKeane_MS_Thesis_Chapter3.tex}
+
+
+%************************************
+% SECTION 3.1
+\section{Algorithm Components}
+
+\indent
+\input{./chapters/TommyKeane_MS_Thesis_Chapter3_Section1.tex}
+
+
+%************************************
+% SECTION 3.1.1
+\subsection{Feature Extraction}
+
+\indent
+\input{./chapters/TommyKeane_MS_Thesis_Chapter3_Section1_1.tex}
+
+%************************************
+% SECTION 3.1.2
+\subsection{Affine Transform Search}
+
+\indent
+\input{./chapters/TommyKeane_MS_Thesis_Chapter3_Section1_2.tex}
+
+
+%************************************
+% SECTION 3.1.3
+\subsection{Weighted and Filtered Mutual Information}
+
+\indent
+\input{./chapters/TommyKeane_MS_Thesis_Chapter3_Section1_3.tex}
+
+
+%************************************
+% SECTION 3.1.4
+\subsection{Affine Homography}
+
+\indent
+\input{./chapters/TommyKeane_MS_Thesis_Chapter3_Section1_4.tex}
+
+
+%************************************
+% SECTION 3.1.5
+\subsection{Stitching and Blending}
+
+\indent
+\input{./chapters/TommyKeane_MS_Thesis_Chapter3_Section1_5.tex}
+
+
+%************************************
+% SECTION 3.2
+\section{Algorithm Overview}
+
+\indent
+\input{./chapters/TommyKeane_MS_Thesis_Chapter3_Section2.tex}
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% CHAPTER 4
+\chapter{Implementation and Constraints}
+
+\indent
+\input{./chapters/TommyKeane_MS_Thesis_Chapter4.tex}
+
+
+%************************************
+% SECTION 4.1
+\section{MATLAB\textsuperscript{\textregistered} Implementation}
+
+\indent
+\input{./chapters/TommyKeane_MS_Thesis_Chapter4_Section1.tex}
+
+
+%************************************
+% SECTION 4.2
+\section{OpenCV Implemenation}
+
+\indent
+\input{./chapters/TommyKeane_MS_Thesis_Chapter4_Section2.tex}
+
+
+%************************************
+% SECTION 4.3
+\section{Empirically Determined Limitations}
+
+\indent
+\input{./chapters/TommyKeane_MS_Thesis_Chapter4_Section3.tex}
+
+%************************************
+% SECTION 4.4
+\section{Optimal Operation and Use}
+
+\indent
+\input{./chapters/TommyKeane_MS_Thesis_Chapter4_Section4.tex}
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% CHAPTER 5
+\chapter{Results}
+
+\indent
+\input{./chapters/TommyKeane_MS_Thesis_Chapter5.tex}
+
+%************************************
+% SECTION 5.1
+\section{Affine Scenarios}
+
+\indent
+\input{./chapters/TommyKeane_MS_Thesis_Chapter5_Section1.tex}
+
+
+%************************************
+% SECTION 5.2
+\section{Near-Affine Scenarios}
+
+\indent
+\input{./chapters/TommyKeane_MS_Thesis_Chapter5_Section2.tex}
+
+
+%************************************
+% SECTION 5.3
+\section{Projective Scenarios}
+
+\indent
+\input{./chapters/TommyKeane_MS_Thesis_Chapter5_Section3.tex}
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% CHAPTER 6
+\chapter{Conclusions and Future Work}
+
+\indent
+\input{./chapters/TommyKeane_MS_Thesis_Chapter6.tex}
+
+%************************************
+% SECTION 6.1
+\section{Future Work}
+
+\indent
+\input{./chapters/TommyKeane_MS_Thesis_Chapter6_Section1.tex}
+
+%************************************
+% SECTION 6.2
+\section{Conclusions}
+
+\indent
+\input{./chapters/TommyKeane_MS_Thesis_Chapter6_Section2.tex}
+
+
+\end{doublespace}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% REFERENCES
+\begin{singlespace}
+	\bibliography{TommyKeane_MS_Thesis_Bibliography.bib}
+	\nocite{*}
+\end{singlespace}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% END OF DOCUMENT
+\end{document}
