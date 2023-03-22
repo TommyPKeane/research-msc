@@ -4,9 +4,9 @@
 //  call stStitchingParams.h.
 //
 
-#include <cv.h>			// OpenCV
-#include <cxcore.h>		// OpenCV
-#include <highgui.h>	// OpenCV
+#include <cv.h>         // OpenCV
+#include <cxcore.h>     // OpenCV
+#include <highgui.h>    // OpenCV
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -18,7 +18,7 @@
 // **************************************************** //
 
 // Definition of Pi
-#define PI	3.14159265358979323
+#define PI  3.14159265358979323
 
 // (Unit Step Product) Checks if input is Positive,
 //  returns input if true, zero if false
