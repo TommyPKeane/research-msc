@@ -1,9 +1,9 @@
-function [ SP ] = MR_Spline( A, B, MASK )
-% MR_SPLINE Returns the Splined Image from A and B
+function [ SP ] = MR_SplineM( A, B, MASK )
+% MR_SPLINE Returns the Splined Image from A and B using the MASK
 %
+% LAST EDIT: 2010.05.11
+% Tommy P. Keane
 %
-%
-% See also impyramid.
 
 %% SETUP SIZE
 

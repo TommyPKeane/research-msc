@@ -1,10 +1,21 @@
 function [ th, zo, thK, zoK ] = AffineRobustness( impath, root, ext, num, thK, zoK )
-%AFFINEROBUSTNESS
+%AFFINEROBUSTNESS Tests affine image pairs with some initial overlap
+%
+% impath -- Image Files' Root Directory
+% root -- Root File Name for Images (Part of Current Naming Convention)
+% ext -- Image Files' File Extension
+% num -- Image Files' Number (Part of Current Naming Convention)
+% thK -- Similarity Transform Rotation Parameter
+% zoK -- Similarity Transform Scaling Parameter
+%
+% th -- Resultant Rotation for Similarity Transform Between Images
+% zo -- Resultant Scaling for Similarity Transform Between Images
+% thK -- Similarity Transform Rotation Parameter
+% zoK -- Similarity Transform Scaling Parameter
 %
 %
-%
-%
-%
+% LAST EDIT: 2010.05.11
+% Tommy P. Keane
 
 %% VARIABLE SETUP
 
@@ -29,8 +40,9 @@ ZO = 1 : dzo : 1;
 q = 3;
 
 
-%% RUN
-   
+%% FILE NAMING VARIABLES
+
+% Naming convention parameters, only good for current data set
 if num < 10;
     
     LN = ['00' num2str(num)];
@@ -48,10 +60,10 @@ else
     
 end;
 
-%% FILE READING AND NAMING
-
+% Start runtime evaluation
 tic;
 
+% Naming convention parameters, only good for current data set
 L = '_L_';
 R = '_R_';
 SP = '_SP_';
@@ -59,21 +71,26 @@ IWSP = [ './Results/' root SP LN '_' RN ext ];
 
 %% READ IMAGE FILES
 
+% Read first image into MATLAB
 fname = [impath root L LN ext];
 f = imread( fname );
 
+% Read second image into MATLAB
 gname = [impath root R RN ext];
 g = imread( gname );
 
+% Apply similarity transform to generate a false affine relationship
 [ f, g, ff, gg, TFK ] = SimilarityTransform( f, g, zoK, thK, 1 );
 
 %% CROP FOR CAMERA ARTIFACTS
 
+% % Some images have black lines along frame edges from the camera
 % f = f(10:1:end-9,10:1:end-9,:);
 % g = g(10:1:end-9,10:1:end-9,:);
 
 %% HISTOGRAM EQUALIZATION
 
+% % Generate new output with equalized histograms for luminance correction
 % FG = zeros( ([size(g)] .* [1 2 1]) );
 % 
 % for i = 1 : 1 : 3;
@@ -86,33 +103,25 @@ g = imread( gname );
 % g = FG(:,size(g,2)+1:end,:);
 
 
-%% LAB TRANSFORM
-
-cform = makecform('srgb2lab');
-F = applycform(f,cform);
-G = applycform(g,cform);
-
 %% MULTI RESOLUTION wMI SEARCH
 
+% Run search
 [ AT, BT, At, Bt, Atc, Btc, mt, nt, dr, dc, TF, zo, th ] = MR_ALMI( F, G, Lnum, w, al, TH, ZO, q );
 
+% Apply resultant translation parameters to Input Images
 [ C, D, SL ] = Peak2Overlap( At, Bt, mt(1), nt(1), dr(1), dc(1) );
 % [ Cc, Dc, SLc ] = Peak2Overlap( Atc, Btc, mt(1), nt(1), dr(1), dc(1) );
 % [ CT, DT, SLt ] = Peak2Overlap( AT{1}, BT{1}, mt(1), nt(1), dr(1), dc(1) );
 
+% % Generate Diagonal Mask
 % MASKd = zeros( size(CT) );
 % for i = 1 : 1 : mt;
 %     MASKd( i, 1:1:SL(i,1) ) = 1;
 % end;
 
-% BD = imclose( ceil( (D(:,:,1)+D(:,:,2)+D(:,:,3))./3 ), ones(10) );
-% BC = imclose( ceil( (C(:,:,1)+C(:,:,2)+C(:,:,3))./3 ), ones(10) );
-% MASKa = (BC + zeros(size(DT)) ./ 2);
-
+% % Apply Spline Blending with or without Mask
 [ SP ] = MR_Spline( C, D, [] );
 % [ SPD ] = MR_SplineM( C, D, MASKd );
-% [ SPA ] = MR_SplineM( C, D, MASKa );
-
 
 %% WRITE FILES TO DISK
 
@@ -125,8 +134,8 @@ imwrite( SP, IWSP );
 % Save all workspace variables
 save( [ './Results/Robustness/' root '_' LN '_' RN '_' num2str(zoK) '_' num2str(thK) '.mat' ] );
 
+% Display runtime
 disp( T );
 
 %% END OF FILE
 end
-

@@ -6,7 +6,10 @@ function [ Y ] = Yimage( g )
 %  | Y |    | 0.253    0.684   0.063 |    | R |
 %  | E | =  | 0.500   -0.500   0.000 |  * | G |
 %  | S |    | 0.250    0.250  -0.500 |    | B |
-
+%
+% LAST EDIT: 2010.05.11
+% Tommy P. Keane
+%
 
 %% LUMINANCE CHANNEL IMAGE
 
