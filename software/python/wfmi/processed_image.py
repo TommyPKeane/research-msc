@@ -1,3 +1,5 @@
+"""
+"""
 import logging
 import math
 import pathlib
@@ -81,15 +83,22 @@ PIL_MODES_4CHANNEL = (
 
 
 def pillow_image_to_opencv_image(pillow_image: PIL.Image.Image) -> numpy.ndarray:
-    pillow_data = numpy.array(pillow_image)
-    opencv_image = cv2.cvtColor(pillow_data, cv2.cv.CV_RGB2BGR)
+    pillow_data: numpy.ndarray = numpy.array(pillow_image)
+    opencv_image: numpy.ndarray = cv2.cvtColor(pillow_data, cv2.COLOR_RGB2BGR)
     return opencv_image
 
 
 def opencv_image_to_pillow_image(opencv_image: numpy.array) -> PIL.Image.Image:
-    opencv_image_rgb = cv2.cvtColor(opencv_image, cv2.cv.CV_BGR2RGB)
-    pillow_image = PIL.Image.fromarray(opencv_image_rgb)
-    return opencv_image
+    opencv_image_rgb: numpy.ndarray = cv2.cvtColor(opencv_image, cv2.COLOR_BGR2RGB)
+    pillow_image: PIL.Image.Image = PIL.Image.fromarray(opencv_image_rgb)
+    return pillow_image
+
+
+def intensity_shift(pixel: float, offset: float) -> float:
+    return pixel + offset
+
+
+intensity_shift_vec = numpy.vectorize(intensity_shift)
 
 
 class ProcessedImage():
@@ -157,6 +166,14 @@ class ProcessedImage():
         return None
 
     @property
+    def image(self) -> PIL.Image.Image:
+        return self._image
+
+    @property
+    def cvimage(self) -> numpy.ndarray:
+        return pillow_image_to_opencv_image(self._image)
+
+    @property
     def name(self) -> typing.Optional[str]:
         return self._name
 
@@ -205,10 +222,11 @@ class ProcessedImage():
                   [-1, -1, -1],
                   [-1,  8, -1],
                   [-1, -1, -1],
-                ]
+                ],
+                dtype=float,
             )
             blurred_cvimage_float = cv2.normalize(
-                filtered_cvimage,
+                blurred_cvimage,
                 None,
                 0.0,
                 1.0,
@@ -217,18 +235,11 @@ class ProcessedImage():
             )
             filtered_cvimage = cv2.filter2D(
                 blurred_cvimage_float,
-                -1,
-                laplacian_kernel,
+                cv2.CV_64FC3,
+                kernel=laplacian_kernel,
+                borderType=cv2.BORDER_REPLICATE,
             )
-            normalized_cvimage = cv2.normalize(
-                filtered_cvimage,
-                None,
-                0,
-                255,
-                cv2.NORM_MINMAX,
-                dtype=cv2.CV_8UC3,
-            )
-            self._preprocessed_image = opencv_image_to_pillow_image(normalized_cvimage)
+            self._preprocessed_cvimage = filtered_cvimage + self.cvimage
             module_log.debug(f"Pre-Processed Image: {self._name}")
         else:
             module_log.debug(f"Not Pre-Processing Image: {self._name}")
@@ -254,24 +265,60 @@ class ProcessedImage():
         """
         if needs_postprocessing:
             if channel_offsets:
-                _preprocessed_image_f64 = cv2.normalize(
-                    self._preprocessed_image,
-                    None,
-                    0.0,
-                    1.0,
-                    cv2.NORM_MINMAX,
-                    dtype=cv2.CV_64FC3,
+                adjusted_cvimage = numpy.dstack(
+                    (
+                        intensity_shift_vec(
+                            self._preprocessed_cvimage[:,:,0],
+                            channel_offsets[0],
+                        ),
+                        intensity_shift_vec(
+                            self._preprocessed_cvimage[:,:,1],
+                            channel_offsets[1],
+                        ),
+                        intensity_shift_vec(
+                            self._preprocessed_cvimage[:,:,2],
+                            channel_offsets[2],
+                        ),
+                    )
                 )
-                adjusted_cvimage = None  # TODO (tommypkeane): Implement offset adjustment
-                self._postprocessed_image = opencv_image_to_pillow_image(adjusted_cvimage)
-                module_log.debug(f"Pre-Processed Image: {self._name}")
+                normalized_adjusted_cvimage = cv2.normalize(
+                    adjusted_cvimage,
+                    None,
+                    0,
+                    255,
+                    cv2.NORM_MINMAX,
+                    dtype=cv2.CV_8UC3,
+                )
+                self._postprocessed_image = opencv_image_to_pillow_image(normalized_adjusted_cvimage)
+                module_log.debug(f"Post-Processed Image: {self._name}")
             else:
                 raise ValueError(
                     f"Postprocessing Requires Channel Offsets | channel_offsets: {channel_offsets}"
                 )
         else:
-            module_log.debug(f"Not Pre-Processing Image: {self._name}")
+            module_log.debug(f"Not Post-Processing Image: {self._name}")
         return None
+
+    @property
+    def preprocessed_cvimage(self) -> PIL.Image.Image:
+        return self._preprocessed_image
+
+    @property
+    def postprocessed_cvimage(self) -> PIL.Image.Image:
+        return pillow_image_to_opencv_image(self._postprocessed_image)
+
+    @property
+    def postprocessed_image(self) -> PIL.Image.Image:
+        return self._postprocessed_image
+
+    @property
+    def processed_image(self) -> PIL.Image.Image:
+        _processed_image: PIL.Image.Image = (
+            self._postprocessed_image
+            if self._postprocessed_image is not None
+            else self._image
+        )
+        return _processed_image
 
 
 def processed_images_are_similar(
@@ -354,3 +401,31 @@ def processed_images_are_similar(
         )
 
     return similar
+
+
+def create_preprocessed_image_offsets(
+    image_a: ProcessedImage,
+    image_b: ProcessedImage,
+) -> tuple[tuple]:
+    """Summary
+
+    Args:
+        image_a: ...
+        image_b: ...
+
+    Returns:
+        Tuple of the two tuples of per-channel offsets for `image_a` and
+        `image_b`, matching the same order as the function arguments.
+    """
+    channel_offsets = tuple(
+        numpy.mean(processed_img_left.cvimage, 2).ravel()
+        - numpy.mean(processed_img_right.cvimage, 2).ravel()
+    )
+
+    offsets_a = [(-x / 2.0) for x in channel_offsets]
+    offsets_b = [(x / 2.0) for x in channel_offsets]
+
+    return (
+        offsets_a,
+        offsets_b,
+    )
