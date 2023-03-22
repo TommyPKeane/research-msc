@@ -9,61 +9,60 @@ int TestAffineTransform();
 
 int main( )
 {
-    // ************************************************************************ //
-    // ************************************************************************ //
-//  if( TestColorGradient() == -1 )                                             //
-//  {   MessageBox( NULL, "COLOR GRADIENT FAILED", "", MB_OK ); exit(1);      } //
-//                                                                              //
-//  if( TestGradientThreshold() == -1 )                                         //
-//  {   MessageBox( NULL, "GRADIENT THRESHOLD FAILED", "", MB_OK ); exit(1);  } //
-//                                                                              //
-//  if( TestEdgePyramid() == -1 )                                               //
-//  {   MessageBox( NULL, "EDGE PYRAMID FAILED", "", MB_OK ); exit(1);        } //
-//                                                                              //
-//  if( TestMutualInformation() == -1 )                                         //
-//  {   MessageBox( NULL, "MUTUAL INFORMATION FAILED", "", MB_OK ); exit(1);  } //
-//                                                                              //
-//  if( TestTranslationSearch() == -1 )                                         //
-//  {   MessageBox( NULL, "TRANSLATION SEARCH FAILED", "", MB_OK ); exit(1);  } //
-//                                                                              //
-//  if( TestAffineTransform() == -1 )                                           //
-//  {   MessageBox( NULL, "AFFINE TRANSFORM FAILED", "", MB_OK ); exit(1);    } //
-    // ************************************************************************ //
-    // ************************************************************************ //
+    // Unit-Tests
+    // ********************************************************************** //
+    if (TestColorGradient() == -1)
+    {
+        MessageBox(NULL, "COLOR GRADIENT FAILED", "", MB_OK);
+        exit(1);
+    }
+    else if (TestGradientThreshold() == -1)
+    {
+        MessageBox(NULL, "GRADIENT THRESHOLD FAILED", "", MB_OK);
+        exit(1);
+    }
+    else if (TestEdgePyramid() == -1)
+    {
+        MessageBox(NULL, "EDGE PYRAMID FAILED", "", MB_OK);
+        exit(1);
+    }
+    else if (TestMutualInformation() == -1)
+    {
+        MessageBox(NULL, "MUTUAL INFORMATION FAILED", "", MB_OK);
+        exit(1);
+    }
+    else if (TestTranslationSearch() == -1)
+    {
+        MessageBox(NULL, "TRANSLATION SEARCH FAILED", "", MB_OK);
+        exit(1);
+    }
+    else if (TestAffineTransform() == -1)
+    {
+        MessageBox(NULL, "AFFINE TRANSFORM FAILED", "", MB_OK);
+        exit(1);
+    }
+    else
+    {} // All Tests Passed
+    // ********************************************************************** //
 
 
-    // ******************************************** //
-    //  cv::Mat imColorA = cv::imread( "C:\\Development\\iv\\VideoStitching\\Test Images\\Art Gallery\\Scene 004\\AG_S4_L_001.jpg", 1 );
-    //  cv::Mat imColorB = cv::imread( "C:\\Development\\iv\\VideoStitching\\Test Images\\Art Gallery\\Scene 004\\AG_S4_R_001.jpg", 1 );
-    //
-    //  cv::Mat imColorA = cv::imread( "C:\\Development\\iv\\VideoStitching\\Test Images\\Art Gallery\\Scene 002\\AG_S2_L_001.jpg", 1 );
-    //  cv::Mat imColorB = cv::imread( "C:\\Development\\iv\\VideoStitching\\Test Images\\Art Gallery\\Scene 002\\AG_S2_R_001.jpg", 1 );
-    //
-    //  cv::Mat imColorA = cv::imread( "C:\\Development\\iv\\VideoStitching\\Test Images\\Affine Images\\CasinoSlots_L_001.png", 1 );
-    //  cv::Mat imColorB = cv::imread( "C:\\Development\\iv\\VideoStitching\\Test Images\\Affine Images\\CasinoSlots_R_002.png", 1 );
-    //
-    //  cv::Mat imColorA = cv::imread( "C:\\Development\\iv\\VideoStitching\\Test Images\\LenelPerfectAffineTests\\TestOriginal.bmp", 1 );
-    //  cv::Mat imColorB = cv::imread( "C:\\Development\\iv\\VideoStitching\\Test Images\\LenelPerfectAffineTests\\TestRotated5.bmp", 1 );
-    //
-    //  cv::Mat imColorA = cv::imread( "C:\\Development\\iv\\VideoStitching\\Test Images\\LenelPerfectAffineTests\\TestOriginal.bmp", 1 );
-    //  cv::Mat imColorB = cv::imread( "C:\\Development\\iv\\VideoStitching\\Test Images\\LenelPerfectAffineTests\\TestRotated5Scaled90.bmp", 1 );
-    //
-    //  cv::Mat imColorA = cv::imread( "C:\\Development\\iv\\VideoStitching\\Test Images\\Affine Images\\CarLotOld_L_004.png", 1 );
-    //  cv::Mat imColorB = cv::imread( "C:\\Development\\iv\\VideoStitching\\Test Images\\Affine Images\\CarLotOld_R_004.png", 1 );
-    //
-      cv::Mat imColorA = cv::imread( "C:\\Development\\iv\\VideoStitching\\Test Images\\Lenel\\Lenel_L_006.png", 1 );
-      cv::Mat imColorB = cv::imread( "C:\\Development\\iv\\VideoStitching\\Test Images\\Lenel\\Lenel_R_006.png", 1 );
+    // Read-in Data
+    // ********************************************************************** //
+    cv::Mat imColorA = cv::imread("/path/to/images/Lenel_L_006.png", 1);
+    cv::Mat imColorB = cv::imread("/path/to/images/Lenel_R_006.png", 1);
 
-    assert( imColorA.type() == CV_8UC3 );           // Input Must Be 8-Bit 3 Channel
-    assert( imColorB.type() == CV_8UC3 );           // Input Must Be 8-Bit 3 Channel
-    assert( imColorA.size() == imColorB.size() );   // Inputs Must Have Same Size
+    assert(imColorA.type() == CV_8UC3);           // Input Must Be 8-Bit 3 Channel
+    assert(imColorB.type() == CV_8UC3);           // Input Must Be 8-Bit 3 Channel
+    assert(imColorA.size() == imColorB.size());   // Inputs Must Have Same Size
+    // ********************************************************************** //
 
 
-    // ************************************************ //
+    // Configure Algorithm Parameters
+    // ********************************************************************** //
     int numEdge = 4;                                    // Gradient to Edge Quantization Levels - 1, ENTROPY + IMAGE SIZE DEPENDENT
     int numPymd = 4;                                    // Total Edge Gaussian Pyramid Levels (More levels == Smaller Image Size for Registration)
     int wdwRadius = 4;                                  // Mul. Res. Subsequent Level Window Radius
-    int stepAffine = 1;
+    int stepAffine = 1;                                 // ...
     stepAffine = std::min<int>( stepAffine, numPymd );  // Make sure within bounds
 
 
@@ -74,60 +73,67 @@ int main( )
     int imRows = imColorA.rows;                         // Number of Input Image(s') Rows
     int imCols = imColorA.cols;                         // Number of Input Image(s') Columns
     cv::Size imSize = imColorA.size();                  // Input Image(s') Size
+    // ********************************************************************** //
 
 
-    // **************************************************** //
+    // ???
+    // ********************************************************************** //
     double scaleFrst = 0.7;                                 // Lower Bound of Scaling
     double scaleLast = 1.3;                                 // Upper Bound of Scaling
     double scaleStep = 0.05;                                // Step Size in Scale Search
 
-    double skewRFrst = 1;//0.9;                                 // Lower Bound of Row Skew
-    double skewRLast = 1;//1.1;                                 // Upper Bound of Row Skew
-    double skewRStep = 1;//0.05;                                // Step Size in Row Skew Search
+    double skewRFrst = 1; // 0.9;                           // Lower Bound of Row Skew
+    double skewRLast = 1; // 1.1;                           // Upper Bound of Row Skew
+    double skewRStep = 1; // 0.05;                          // Step Size in Row Skew Search
 
-    double skewCFrst = 1;//0.9;                                 // Lower Bound of Col Skew
-    double skewCLast = 1;//1.1;                                 // Upper Bound of Col Skew
-    double skewCStep = 1;//0.05;                                // Step Size in Col Skew Search
+    double skewCFrst = 1; // 0.9;                           // Lower Bound of Col Skew
+    double skewCLast = 1; // 1.1;                           // Upper Bound of Col Skew
+    double skewCStep = 1; // 0.05;                          // Step Size in Col Skew Search
 
     double rotFrst = -10;                                   // Lower Bound of Rotation, in degrees
     double rotLast = 10;                                    // Upper Bound of Rotation, in degrees
     double rotStep = 0.5;                                   // Step Size in Rotation Search, in degrees
 
     cv::Mat tformOptimal = cv::Mat::eye( 3, 3, CV_64F );    // Result of Affine Transform Search
-    double* ptrTformOptimal = (double*)tformOptimal.data;   //
-    double ptrTformOptimalValues[6] = { 0,                  // SCL
-                                        0,                  // SKR
-                                        0,                  // SKC
-                                        0,                  // ROT
-                                        0,                  // TRR
-                                        0 };                // TRC
+    double * ptrTformOptimal = (double*)tformOptimal.data;  // ...
+    double ptrTformOptimalValues[6] = {
+          0     // [0] SCL
+        , 0     // [1] SKR
+        , 0     // [2] SKC
+        , 0     // [3] ROT
+        , 0     // [4] TRR
+        , 0     // [5] TRC
+    };
+    // ********************************************************************** //
 
 
-    // ******************************************** //
+    // ???
+    // ********************************************************************** //
     cv::Size imTformSize;                           // Storage for Post-Transform Image Size
     cv::Mat tformAffine( 3, 3, CV_64F );            // Affine Transform Matrix
     cv::Mat tformB = cv::Mat::eye(3,3,CV_64F);      // Identity Transform Matrix
-    double* ptrTformB = (double*)tformB.data;       //
+    double * ptrTformB = (double *)tformB.data;     //
 
     cv::Mat tformEye = cv::Mat::eye( 3, 3, CV_64F );//
+    // ********************************************************************** //
 
 
 
-    // This is a simple check to see if the results are visually
-    // different, which can cause the gradients to be different and
-    // the registration to fail. A more complex method could be
-    // put in place, but given research constraints an automatic
-    // method was not known at the time, without much more
-    // extensive research. Currently color difference is the only
-    // measure, even though the images are also sharpened if
-    // "needCleaning" is non-zero. Again, an automatic method for
-    // accurately determining image "sharpenness" was not known
-    // without more extensive research. And sharpening of low entropy
-    // (repeated texture) images can actually sway the registration
-    // to fail. For example, tiled floors can match in arbitrary
-    // orientations, especially if sharpened to make their pattern
-    // have a higher gradient result.
-    // **************************************************************** //
+    // Clean Images (if needed)
+    // ********************************************************************** //
+    // This is a simple check to see if the results are visually different,
+    // which can cause the gradients to be different and the registration to
+    // fail. A more complex method could be put in place, but given research
+    // constraints an automatic method was not known at the time, without much
+    // more extensive research. Currently color difference is the only measure,
+    // even though the images are also sharpened if "needCleaning" is non-zero.
+    // Again, an automatic method for accurately determining image "sharpenness"
+    // was not known without more extensive research. And sharpening of low
+    // entropy (repeated texture) images can actually sway the registration to
+    // fail. For example, tiled floors can match in arbitrary orientations,
+    // especially if sharpened to make their pattern have a higher gradient
+    // result.
+    // ********************************************************************** //
     cv::Mat imEnhanceA = cv::Mat::zeros( imRows, imCols, CV_8UC3 );     //
     cv::Mat imEnhanceB = cv::Mat::zeros( imRows, imCols, CV_8UC3 );     //
 
@@ -607,28 +613,33 @@ int main( )
 
     // COLOR IMAGE PROJECTIVE TRANSFORMATION
     // ************************************************ //
-    cv::Mat imProjWorldA = cv::Mat::zeros( worldRows,   //
-                                           worldCols,   //
-                                           CV_8UC3 );   //
+    cv::Mat imProjWorldA = cv::Mat::zeros(
+          worldRows
+        , worldCols
+        , CV_8UC3
+    );
 
-    cv::warpPerspective( imWorldA,                      //
-                         imProjWorldA,                  //
-                         tformProjAB,                   //
-                         imWorldA.size(),               //
-                         cv::INTER_LINEAR,              //
-                         cv::BORDER_TRANSPARENT );      //
+    cv::warpPerspective(
+          imWorldA                  //
+        , imProjWorldA              //
+        , tformProjAB               //
+        , imWorldA.size()           //
+        , cv::INTER_LINEAR          //
+        , cv::BORDER_TRANSPARENT    //
+    );
+    // ********************************************************************** //
 
 
 
-    // WRITE IMAGES TO DISC
-    // ************************************************ //
-    cv::imwrite( "C:\\Development\\iv\\VideoStitching\\Test Images\\LenelPerfectAffineTests\\TestRotated5Scaled90_WA.jpg", imWorldA );
-    cv::imwrite( "C:\\Development\\iv\\VideoStitching\\Test Images\\LenelPerfectAffineTests\\TestRotated5Scaled90_WAp.jpg", imProjWorldA );
-    cv::imwrite( "C:\\Development\\iv\\VideoStitching\\Test Images\\LenelPerfectAffineTests\\TestRotated5Scaled90_WB.jpg", imWorldB );
-    cv::imwrite( "C:\\Development\\iv\\VideoStitching\\Test Images\\LenelPerfectAffineTests\\TestRotated5Scaled90_WABaff.jpg", imWorldAffn );
-    cv::imwrite( "C:\\Development\\iv\\VideoStitching\\Test Images\\LenelPerfectAffineTests\\TestRotated5Scaled90_WAB.jpg", imWorldProj );
+    // WRITE RESULT IMAGES TO DISC
+    // ********************************************************************** //
+    cv::imwrite("/path/to/results/TestRotated5Scaled90_WA.jpg", imWorldA);
+    cv::imwrite("/path/to/results/TestRotated5Scaled90_WAp.jpg", imProjWorldA);
+    cv::imwrite("/path/to/results/TestRotated5Scaled90_WB.jpg", imWorldB);
+    cv::imwrite("/path/to/results/TestRotated5Scaled90_WABaff.jpg", imWorldAffn);
+    cv::imwrite("/path/to/results/TestRotated5Scaled90_WAB.jpg", imWorldProj);
+    // ********************************************************************** //
 
-    // Exit ************ //
     return 0;
 }
 
@@ -657,19 +668,27 @@ int TestMutualInformation()
 
 int TestTranslationSearch()
 {
-    /*cv::Mat testImageA( 3, 4, CV_8U );
+    cv::Mat testImageA( 3, 4, CV_8U );
     cv::Mat testImageB( 3, 4, CV_8U );
 
-    int valueA[12] = { 1, 1, 3, 1, 3, 2, 2, 2, 1, 3, 3, 1 };
-    int valueB[12] = { 3, 2, 2, 2, 1, 2, 3, 1, 2, 1, 2, 1 };
+    int valueA[12] = {
+        1, 1, 3, 1,
+        3, 2, 2, 2,
+        1, 3, 3, 1
+    };
+    int valueB[12] = {
+        3, 2, 2, 2,
+        1, 2, 3, 1,
+        2, 1, 2, 1
+    };
 
     int CHECK[2] = {2, 3};
 
-    for( int i = 0; i < 3; i++ )
+    for (int i = 0; i < 3; ++i)
     {
-        for( int j = 0; j < 4; j++ )
+        for(int j = 0; j < 4; ++j)
         {
-            int index = i+j*3;
+            int index = i + (j * 3);
             testImageA.data[index] = valueA[index];
             testImageB.data[index] = valueB[index];
         }
@@ -679,14 +698,34 @@ int TestTranslationSearch()
 
     int wdwTrLim[1] = {0};
 
-    int mapSize = (2*testImageA.rows - 1)*(2*testImageA.cols - 1);
+    int mapSize = (
+        ((2 * testImageA.rows) - 1)
+        * ((2 * testImageA.cols) - 1)
+    );
 
-    stTranslateSearch( testImageA, testImageB, 3, wdwTrLim, RESULT[0], RESULT[1], mapSize );
+    stTranslateSearch(
+          testImageA
+        , testImageB
+        , 3
+        , wdwTrLim
+        , RESULT[0]
+        , RESULT[1]
+        , mapSize
+    );
 
-    std::cout << RESULT[0] << " " << RESULT[1] << std::endl;
+    std::cout
+        << RESULT[0]
+        << " "
+        << RESULT[1]
+        << std::endl;
 
-    if( (CHECK[0] != RESULT[0]) | (CHECK[1] != RESULT[1]) )
-        return -1;*/
+    if (
+        (CHECK[0] != RESULT[0])
+        || (CHECK[1] != RESULT[1])
+    )
+    {
+        return -1;
+    }
 
     return 0;
 }
