@@ -7,7 +7,7 @@ This directory contains the original MATLAB prototype code written for my M.Sc. 
 - [Code Directories](#code-directories)
     - [`matlab` \(MATLAB R2009b\)](#matlab-matlab-r2009b)
     - [`cpp` \(C++\)](#cpp-c)
-- [`python` \(Python 3.11\)](#python-python-311)
+    - [`python` \(Python 3.11\)](#python-python-311)
 - [License](#license)
 
 <!-- /MarkdownTOC -->
@@ -28,7 +28,7 @@ The `matlab/` directory provides the MATLAB code for the original prototype of t
 The `cpp/` directory provides the C++ code for the refactored prototype implementation of the algorithm from my 2010 Co-Op (Paid Internship) role and any clean-up refactoring I had done while writing the Thesis document itself.
 
 <a id="python-python-311"></a>
-## `python` (Python 3.11)
+### `python` (Python 3.11)
 
 The `python/` directory contains a recent re-implementation using Python 3.11 as a custom package with a dependency on `numpy` and `pillow` (the Python Image Library), including Unit-Testing with `pytest` and an interactive Jupyter Notebook for demonstration purposes.
 
