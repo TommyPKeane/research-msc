@@ -301,7 +301,7 @@ class ProcessedImage():
 
     @property
     def preprocessed_cvimage(self) -> PIL.Image.Image:
-        return self._preprocessed_image
+        return self._preprocessed_cvimage
 
     @property
     def postprocessed_cvimage(self) -> PIL.Image.Image:
@@ -418,8 +418,8 @@ def create_preprocessed_image_offsets(
         `image_b`, matching the same order as the function arguments.
     """
     channel_offsets = tuple(
-        numpy.mean(processed_img_left.cvimage, 2).ravel()
-        - numpy.mean(processed_img_right.cvimage, 2).ravel()
+        numpy.mean(image_a.cvimage, 2).ravel()
+        - numpy.mean(image_b.cvimage, 2).ravel()
     )
 
     offsets_a = [(-x / 2.0) for x in channel_offsets]
