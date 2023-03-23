@@ -320,7 +320,5 @@ void stAffineParamSearch( const double* tformLimits,
     }
 
 
-    // END OF FILE
-    // ************ //
-    return;         // Function Returns optimalParam by Reference
+    return;  // Function Returns optimalParam by Reference
 }

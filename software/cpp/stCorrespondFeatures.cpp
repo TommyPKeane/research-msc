@@ -196,7 +196,6 @@ void stCorrespondFeatures( const cv::Mat& imGradA,
     //
     // ******************************************** //
 
-    // END OF FILE
-    // ************ //
-    return;         // Function Returns tformProjAB by reference
+
+    return; // Function Returns tformProjAB by reference
 }
